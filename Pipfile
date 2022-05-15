@@ -11,6 +11,12 @@ imageio = "*"
 scikit-image = "*"
 pandas = "*"
 numpy = "*"
+seaborn = "*"
+scipy = "*"
+openpyxl = "*"
+pillow = "*"
+xlsxwriter = "*"
+sklearn = "*"
 
 [dev-packages]
 
