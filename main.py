@@ -112,7 +112,7 @@ def paths(mypath):
 
             if count == 1:
 
-                out_path = mypath + "\Test_results.xlsx"
+                out_path = mypath + "/Test_results.xlsx"
                 writer = pd.ExcelWriter(out_path, engine='xlsxwriter')
                 data.to_excel(writer, sheet_name='Sheet1', header=True, index=False)
                 writer.save()
@@ -675,11 +675,11 @@ def mybin(image, pixel):
 #######################################################################
 
 
-f2=r"./rem_nacl\rem_nacl"
-f1=r"./rem_ms"
-l=[r"./rem_nacl", r"./rem_ms"]
-condi_list=["NaCl", "MS"]
-order=["MS", "NaCl"]
+f2 = r"./rem_nacl\rem_nacl"
+f1 = r"./rem_ms"
+l = [r"./rem_nacl", r"./rem_ms"]
+condi_list = ["NaCl", "MS"]
+order = ["MS", "NaCl"]
 
 pixel = 9.02  # enter pixelsize of your image (can check this in fiji)
 
