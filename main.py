@@ -675,18 +675,17 @@ def mybin(image, pixel):
 #######################################################################
 
 
-f2 = r"C:\Users\miche\Desktop\REM_ND\rem_NaCl\rem_NaCl_root"
-f1 = r"C:\Users\miche\Desktop\REM_ND\rem_MS\rem_MS_root"
-l = [r"C:\Users\miche\Desktop\REM_ND\rem_NaCl\rem_NaCl_root", r"C:\Users\miche\Desktop\REM_ND\rem_MS\rem_MS_root",
-     r"C:\Users\miche\Desktop\REM_ND\rem_Sorbitol\rem_Sorbitol_root"]
-condi_list = ["NaCl", "MS", "Sorbitol"]
-order = ["MS", "NaCl", "Sorbitol"]
+f2=r"./rem_nacl\rem_nacl"
+f1=r"./rem_ms"
+l=[r"./rem_nacl", r"./rem_ms"]
+condi_list=["NaCl", "MS"]
+order=["MS", "NaCl"]
 
 pixel = 9.02  # enter pixelsize of your image (can check this in fiji)
 
 semua(l, order)  # get tsne, knn, boxplot between all conditions
 
-paths(f1, pixel)  # get excel, pictures from 1 condition
+paths(f1)  # get excel, pictures from 1 condition
 
 # l=list of paths containing the images to be quantified and compared togehter
 # condi_list=list of conditions corresponding to the paths in l
