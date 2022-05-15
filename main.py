@@ -1,105 +1,20 @@
 #  cleanup version 17.3.22
 
-import cv2
-import matplotlib.pyplot as plt
-from glob import glob
-import imageio as iio
 import skimage
-from skimage import data
-from skimage.filters import threshold_otsu
-from skimage.segmentation import clear_border
-from skimage.measure import label, regionprops
-from skimage.morphology import closing, square
-from skimage.color import label2rgb
-from skimage.measure import label, regionprops, regionprops_table
-from skimage.morphology import closing, square, disk
-from skimage.color import label2rgb
-import numpy as np
-import matplotlib.pyplot as plt
-import matplotlib.patches as mpatches
-from skimage import data, filters, measure, morphology
-import pandas as pd
-from os import listdir
-from os.path import isfile, join
-import os
 
 print(skimage.__version__)
-from statistics import mean
-import scipy.ndimage.morphology as ndi
-import numpy as np
-import matplotlib.pyplot as plt
-from scipy import ndimage as ndi
-from skimage.segmentation import watershed
-from skimage.feature import peak_local_max
-import os
-import openpyxl
-import pandas as pd
-from openpyxl.utils.dataframe import dataframe_to_rows
-from PIL import Image, ImageFilter
-from scipy.ndimage.filters import gaussian_filter
-from skimage import morphology
-import xlsxwriter
-import pandas as pd
-import seaborn as sns
-import matplotlib.pyplot as plt
-import cv2
-import matplotlib.pyplot as plt
-from glob import glob
-import imageio as iio
 import skimage
-from skimage import data
-from skimage.filters import threshold_otsu
-from skimage.segmentation import clear_border
-from skimage.measure import label, regionprops
-from skimage.morphology import closing, square
-from skimage.color import label2rgb
-from skimage.measure import label, regionprops, regionprops_table
-from skimage.morphology import closing, square, disk
-from skimage.color import label2rgb
-import numpy as np
-import matplotlib.pyplot as plt
-import matplotlib.patches as mpatches
-from skimage import data, filters, measure, morphology
-import pandas as pd
-from os import listdir
-from os.path import isfile, join
-import os
 
 print(skimage.__version__)
-from statistics import mean
-import scipy.ndimage.morphology as ndi
-import numpy as np
-import matplotlib.pyplot as plt
-from scipy import ndimage as ndi
-from skimage.segmentation import watershed
-from skimage.feature import peak_local_max
-import os
-import openpyxl
-import pandas as pd
-from openpyxl.utils.dataframe import dataframe_to_rows
-from PIL import Image, ImageFilter
-from scipy.ndimage.filters import gaussian_filter
-from skimage import morphology
-import xlsxwriter
-import cv2
-import matplotlib.pyplot as plt
 from glob import glob
 import imageio as iio
-import skimage
-from skimage import data
-from skimage.filters import threshold_otsu
 from skimage.segmentation import clear_border
 from skimage.measure import label, regionprops
-from skimage.morphology import closing, square
-from skimage.color import label2rgb
-from skimage.measure import label, regionprops, regionprops_table
-from skimage.morphology import closing, square, disk
+from skimage.morphology import closing
 from skimage.color import label2rgb
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.patches as mpatches
-from skimage import data, filters, measure, morphology
-import pandas as pd
 from os import listdir
 from os.path import isfile, join
 from statistics import mean
@@ -111,33 +26,21 @@ from skimage.segmentation import watershed
 from skimage.feature import peak_local_max
 import os
 import openpyxl
-import pandas as pd
 from openpyxl.utils.dataframe import dataframe_to_rows
 import seaborn as sns
 
 from sklearn.manifold import TSNE
 from sklearn import preprocessing
 from scipy.ndimage.filters import gaussian_filter
-from skimage import morphology
 import statistics
 
 from sklearn.model_selection import train_test_split
-from sklearn.metrics import mean_squared_error
-from math import sqrt
-from sklearn.neighbors import KNeighborsRegressor
-from sklearn.model_selection import GridSearchCV
-from sklearn.ensemble import BaggingRegressor
 
 from sklearn.neighbors import KNeighborsClassifier
-from sklearn import metrics
-from matplotlib.colors import ListedColormap
-from sklearn.metrics import accuracy_score
 from sklearn.metrics import balanced_accuracy_score
 from sklearn.model_selection import cross_val_score as cross_val_score
 import pandas as pd
-from pylab import rcParams
 from sklearn.ensemble import RandomForestClassifier
-from sklearn.model_selection import RandomizedSearchCV
 from sklearn.metrics import accuracy_score, confusion_matrix, classification_report
 from sklearn import tree
 
@@ -760,11 +663,13 @@ def mybin(image, pixel):
     arry_im[18] = mean_relative_fluo
 
     return (
-    props4, arry_im, list_size4, mean_area, var_size, density, list_fluo, list_relative_fluo, mean_fluo, var_fluo,
-    list_intensity_max, mean_intensity_max, list_intensity_min, mean_intensity_min, list_area_filled, mean_area_filled,
-    list_axis_major_length, mean_axis_major_length, list_axis_minor_length, mean_axis_minor_length, list_eccentricity,
-    mean_eccentricity, list_equivalent_diameter_area, mean_equivalent_diameter_area, list_perimeter, mean_perimeter,
-    list_label, sum_label, image, thresh3, closed3, cleared3, image_label_overlay4, label_image4)
+        props4, arry_im, list_size4, mean_area, var_size, density, list_fluo, list_relative_fluo, mean_fluo, var_fluo,
+        list_intensity_max, mean_intensity_max, list_intensity_min, mean_intensity_min, list_area_filled,
+        mean_area_filled,
+        list_axis_major_length, mean_axis_major_length, list_axis_minor_length, mean_axis_minor_length,
+        list_eccentricity,
+        mean_eccentricity, list_equivalent_diameter_area, mean_equivalent_diameter_area, list_perimeter, mean_perimeter,
+        list_label, sum_label, image, thresh3, closed3, cleared3, image_label_overlay4, label_image4)
 
 
 #######################################################################
@@ -794,4 +699,3 @@ paths(f1, pixel)  # get excel, pictures from 1 condition
 # print(locals())
 globals().clear()
 locals().clear()
-
