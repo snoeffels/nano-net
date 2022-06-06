@@ -1,4 +1,5 @@
 #  cleanup version 17.3.22
+import sys
 
 import skimage
 
@@ -674,18 +675,19 @@ def mybin(image, pixel):
 
 #######################################################################
 
+# Build paths: Windows => "\"; Linux, Darwin => "/"
+PATH_SEPERATOR = '\\' if sys.platform == 'win32' else '/'
 
-f2 = r"./rem_nacl\rem_nacl"
-f1 = r"./rem_ms"
-l = [r"./rem_nacl", r"./rem_ms"]
-condi_list = ["NaCl", "MS"]
-order = ["MS", "NaCl"]
+REM_NACL_PATH = PATH_SEPERATOR.join([".", "rem_nacl"])
+REM_MS_PATH = PATH_SEPERATOR.join([".", "rem_ms"])
 
-pixel = 9.02  # enter pixelsize of your image (can check this in fiji)
+condi_list = ["MS", "NaCl"]
 
-semua(l, order)  # get tsne, knn, boxplot between all conditions
+pixel = 9.02  # enter pixels of your image (can check this in fiji)
 
-paths(f1)  # get excel, pictures from 1 condition
+semua([REM_NACL_PATH, REM_MS_PATH], condi_list)  # get tsne, knn, boxplot between all conditions
+
+paths(REM_MS_PATH)  # get excel, pictures from 1 condition
 
 # l=list of paths containing the images to be quantified and compared togehter
 # condi_list=list of conditions corresponding to the paths in l
