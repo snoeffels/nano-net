@@ -1,3 +1,4 @@
 .idea
 **/*.tif*.png
 **/*Test_results.xlsx
+**/node_modules
