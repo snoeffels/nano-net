@@ -10,9 +10,9 @@
           alt="Vuetify Logo"
           class="shrink mr-2"
           contain
-          src="https://cdn.vuetifyjs.com/images/logos/vuetify-logo-dark.png"
+          src="https://cdn.icon-icons.com/icons2/729/PNG/512/ebay_icon-icons.com_62730.png"
           transition="scale-transition"
-          width="40"
+          width="100"
         />
 
         <v-img
@@ -36,9 +36,6 @@
         <v-icon>mdi-open-in-new</v-icon>
       </v-btn>
     </v-app-bar>
-
-
-
     <v-main>
       <router-view/>
     </v-main>
