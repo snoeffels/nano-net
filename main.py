@@ -1,12 +1,6 @@
 #  cleanup version 17.3.22
 import sys
-
 import skimage
-
-print(skimage.__version__)
-import skimage
-
-print(skimage.__version__)
 from glob import glob
 import imageio as iio
 from skimage.segmentation import clear_border
@@ -45,6 +39,7 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import accuracy_score, confusion_matrix, classification_report
 from sklearn import tree
 
+print(skimage.__version__)
 
 # %reset
 

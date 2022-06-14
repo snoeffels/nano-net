@@ -1,6 +1,7 @@
 <template>
   <div class="hello">
     <h1>{{ this.message }}</h1>
+    <button @click="changeText">change text</button>
     <input type="text" v-model="inputValue"/>
     <button @click="onClick">Send</button>
     <div>
@@ -30,6 +31,9 @@ export default {
     })
   },
   methods: {
+    changeText() {
+      this.message = "hallo was geht?"
+    },
     onClick() {
       // Passing values to Python
       eel.print_string(this.inputValue)((val) => {

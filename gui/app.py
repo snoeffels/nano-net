@@ -5,7 +5,7 @@ eel.init('dist')
 
 @eel.expose
 def hello_world():
-    return "Hello from python"
+    return "Hello from python blabla"
 
 
 @eel.expose

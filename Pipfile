@@ -17,6 +17,7 @@ openpyxl = "*"
 pillow = "*"
 xlsxwriter = "*"
 sklearn = "*"
+eel = "*"
 
 [dev-packages]
 
