@@ -1,0 +1,1518 @@
+<!DOCTYPE html>
+<html>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
+<body>
+<canvas id="myChart" style="width:100%;max-width:700px"></canvas>
+
+<script>
+var struct = {
+  labels: [
+      "REMMS4.lif - Image001-1.tif",
+      "REMMS4.lif - Image002-1.tif"
+   ],
+  data: [
+      {
+         x:-15.123,
+         y:9.123
+      },
+      {
+         x:15,
+         y:11
+      }
+   ]
+};
+  
+var struct2 = {
+   "labels":[
+      "REMMS4.lif - Image001-1.tif",
+      "REMMS4.lif - Image002-1.tif",
+      "REMMS4.lif - Image002-2.tif",
+      "remMS5.lif - Image001-1.tif",
+      "remMS5.lif - Image002-1.tif",
+      "remMS5.lif - Image003-1.tif",
+      "remMS5.lif - Image003-2.tif",
+      "remMS6.lif - Image001-1.tif",
+      "remMS6.lif - Image002-1.tif",
+      "remMS6.lif - Image003-1.tif",
+      "remMS6.lif - Image004-1.tif",
+      "remMS6.lif - Image004-2.tif",
+      "remMS6.lif - Image004-3.tif",
+      "remMS6.lif - Image004-4.tif",
+      "remMS6.lif - Image004-5.tif",
+      "remMS6.lif - Image004-6.tif",
+      "remMS6.lif - Image004-7.tif",
+      "remMS6.lif - Image005-1.tif",
+      "remMS6.lif - Image005-2.tif",
+      "remMS6.lif - Image005-3.tif",
+      "remMS6.lif - Image005-4.tif",
+      "remMS6.lif - Image006-1.tif",
+      "remMS6.lif - Image006-2.tif",
+      "remMS6.lif - Image006-3.tif",
+      "remMS6.lif - Image006-4.tif",
+      "remMS6.lif - Image006-5.tif",
+      "remMS6.lif - Image007-1.tif",
+      "remMS6.lif - Image007-10.tif",
+      "remMS6.lif - Image007-2.tif",
+      "remMS6.lif - Image007-3.tif",
+      "remMS6.lif - Image007-4.tif",
+      "remMS6.lif - Image007-5.tif",
+      "remMS6.lif - Image007-6.tif",
+      "remMS6.lif - Image007-7.tif",
+      "remMS6.lif - Image007-8.tif",
+      "remMS6.lif - Image007-9.tif",
+      "remMS6.lif - Image009-1.tif",
+      "remMS6.lif - Image009-2.tif",
+      "REM_MS2_3.lif - Image001-1.tif",
+      "REM_MS2_3.lif - Image002-1.tif",
+      "REM_MS2_3.lif - Image005-1.tif",
+      "REM_MS2_3.lif - Image005-2.tif",
+      "REM_MS2_3.lif - Image007-1.tif",
+      "REM_MS2_3.lif - Image007-2.tif",
+      "REM_MS2_3.lif - Image008-1.tif",
+      "REM_MS2_3.lif - Image008-2.tif",
+      "REM_MS2_3.lif - Image008-3.tif",
+      "REM_MS2_3.lif - Image009-1.tif",
+      "REM_MS2_3.lif - Image009-2.tif",
+      "REM_MS2_3.lif - Image009-3.tif",
+      "REM_MS2_3.lif - Image010-1.tif",
+      "REM_MS2_3.lif - Image010-2.tif",
+      "REM_MS2_3.lif - Image010-3.tif",
+      "REM_MS2_3.lif - Image011-1.tif",
+      "REM_MS2_3.lif - Image011-2.tif",
+      "REM_MS2_3.lif - Image011-3.tif",
+      "REM_MS2_3.lif - Image012-1.tif",
+      "REM_MS2_3.lif - Image012-2.tif",
+      "REM_MS2_3.lif - Image013-1.tif",
+      "REM_MS2_3.lif - Image015-1.tif",
+      "REM_MS2_3.lif - Image017-1.tif",
+      "REM_MS2_3.lif - Image017-2.tif",
+      "REM_MS2_3.lif - Image018-1.tif",
+      "REM_MS2_3.lif - Image019-1.tif",
+      "REM_MS2_3.lif - Image019-2.tif",
+      "REM_MS2_3.lif - Image022-1.tif",
+      "REM_MS2_3.lif - Image022-2.tif",
+      "REM_MS2_3.lif - Image023-1.tif",
+      "REM_MS2_3.lif - Image024-1.tif",
+      "REM_MS2_3.lif - Image024-2.tif",
+      "REM_MS2_3.lif - Image024-3.tif",
+      "REM_MS2_3.lif - Image025-1.tif",
+      "REM_MS2_3.lif - Image025-2.tif",
+      "REM_MS2_3.lif - Image025-3.tif",
+      "REM_MS2_3.lif - Image025-4.tif",
+      "REM_MS2_3.lif - Image025-5.tif",
+      "REM_MS2_3.lif - Image025-6.tif",
+      "REM_MS2_3.lif - Image025-7.tif",
+      "REM_MS2_3.lif - Image026-1.tif",
+      "REM_MS2_3.lif - Image026-2.tif",
+      "REM_MS2_3.lif - Image026-3.tif",
+      "REM_MS2_3.lif - Image026-4.tif",
+      "REM_MS2_3.lif - Image026-5.tif",
+      "REM_MS2_3.lif - Image027-1.tif",
+      "REM_MS2_3.lif - Image027-2.tif",
+      "REM_MS2_3.lif - Image027-3.tif",
+      "REM_MS2_3.lif - Image027-4.tif",
+      "REM_MS2_3.lif - Image027-5.tif",
+      "REM_MS2_3.lif - Image027-6.tif",
+      "REM_MS2_3.lif - Image028-1.tif",
+      "REM_MS2_3.lif - Image028-2.tif",
+      "REM_MS2_3.lif - Image028-3.tif",
+      "REM_MS2_3.lif - Image028-4.tif",
+      "REM_MS2_3.lif - Image029-4.tif",
+      "REM_MS2_3.lif - Image029-5.tif",
+      "REM_MS2_3.lif - Image029-6.tif",
+      "remNACL2.lif - Image001-1.tif",
+      "remNACL2.lif - Image001-2.tif",
+      "remNACL2.lif - Image001-3.tif",
+      "remNACL2.lif - Image001-4.tif",
+      "remNACL2.lif - Image001-5.tif",
+      "remNACL2.lif - Image001-6.tif",
+      "remNACL2.lif - Image002-1.tif",
+      "remNACL2.lif - Image003-1.tif",
+      "remNACL2.lif - Image003-2.tif",
+      "remNACL2.lif - Image003-3.tif",
+      "remNACL2.lif - Image004-1.tif",
+      "REMNacl3.lif - Image001-1.tif",
+      "REMNacl3.lif - Image001-2.tif",
+      "REMNacl3.lif - Image002-1.tif",
+      "REMNacl3.lif - Image002-2.tif",
+      "REMNacl3.lif - Image002-3.tif",
+      "REMNacl3.lif - Image002-4.tif",
+      "REMNacl3.lif - Image002-5.tif",
+      "REMNacl3.lif - Image003-1.tif",
+      "REMNacl3.lif - Image003-2.tif",
+      "REMNacl3.lif - Image003-3.tif",
+      "REMNacl3.lif - Image004-1.tif",
+      "REMNacl3.lif - Image004-2.tif",
+      "REMNacl3.lif - Image005-1.tif",
+      "REMNacl3.lif - Image006-1.tif",
+      "REMNacl3.lif - Image006-2.tif",
+      "REMNacl3.lif - Image006-3.tif",
+      "REMNacl3.lif - Image006-4.tif",
+      "REMNacl3.lif - Image006-5.tif",
+      "REMNacl3.lif - Image006-6.tif",
+      "REMNacl3.lif - Image007-1.tif",
+      "REMNacl3.lif - Image007-2.tif",
+      "REMNacl3.lif - Image009-1.tif",
+      "REMNacl3.lif - Image009-2.tif",
+      "REMNacl3.lif - Image011-1.tif",
+      "REMNacl3.lif - Image011-2.tif",
+      "REMNacl3.lif - Image011-3.tif",
+      "REMNacl3.lif - Image012-1.tif",
+      "REMNacl3.lif - Image012-2.tif",
+      "REMNacl3.lif - Image012-3.tif",
+      "REMNacl3.lif - Image012-4.tif",
+      "REMNacl3.lif - Image012-5.tif",
+      "remNACL4.lif - Image002-1.tif",
+      "remNACL4.lif - Image002-2.tif",
+      "remNACL4.lif - Image002-4.tif",
+      "remNACL4.lif - Image003-1.tif",
+      "remNACL4.lif - Image003-2.tif",
+      "remNACL4.lif - Image004-1.tif",
+      "remNACL4.lif - Image005-1.tif",
+      "remNACL4.lif - Image006-1.tif",
+      "remNACL4.lif - Image006-2.tif",
+      "remNACL4.lif - Image006-3.tif",
+      "remNACL4.lif - Image006-4.tif",
+      "remNACL4.lif - Image006-5.tif",
+      "remNACL4.lif - Image007-1.tif",
+      "remNACL4.lif - Image007-2.tif",
+      "remNACL4.lif - Image007-3.tif",
+      "remNACL4.lif - Image007-4.tif",
+      "remNACL4.lif - Image008-1.tif",
+      "remNACL4.lif - Image008-2.tif",
+      "remNACL4.lif - Image008-3.tif",
+      "remNACL4.lif - Image008-4.tif",
+      "remNaCL5.lif - Image001-1.tif",
+      "remNaCL5.lif - Image001-2.tif",
+      "remNaCL5.lif - Image001-3.tif",
+      "remNaCL5.lif - Image001-4.tif",
+      "remNaCL5.lif - Image001-5.tif",
+      "remNaCL5.lif - Image001-6.tif",
+      "remNaCL5.lif - Image002-1.tif",
+      "remNaCL5.lif - Image002-10.tif",
+      "remNaCL5.lif - Image002-2.tif",
+      "remNaCL5.lif - Image002-3.tif",
+      "remNaCL5.lif - Image002-4.tif",
+      "remNaCL5.lif - Image002-5.tif",
+      "remNaCL5.lif - Image002-6.tif",
+      "remNaCL5.lif - Image002-7.tif",
+      "remNaCL5.lif - Image002-8.tif",
+      "remNaCL5.lif - Image002-9.tif",
+      "remNACL6.lif - Image001-1.tif",
+      "remNACL6.lif - Image001-2.tif",
+      "remNACL6.lif - Image002-1.tif",
+      "remNACL6.lif - Image002-2.tif",
+      "remNACL6.lif - Image002-3.tif",
+      "remNACL6.lif - Image002-4.tif",
+      "remNACL6.lif - Image003-1.tif",
+      "remNACL6.lif - Image003-2.tif",
+      "remNACL6.lif - Image003-3.tif",
+      "remNACL6.lif - Image003-4.tif",
+      "remNACL6.lif - Image003-5.tif",
+      "remNACL6.lif - Image004-1.tif",
+      "remNACL6.lif - Image004-2.tif",
+      "remNACL6.lif - Image004-3.tif",
+      "remNACL6.lif - Image004-4.tif",
+      "remNACL6.lif - Image004-5.tif",
+      "remNACL6.lif - Image004-6.tif",
+      "remNACL6.lif - Image004-7.tif",
+      "remNACL6.lif - Image004-8.tif",
+      "remNACL6.lif - Image005-1.tif",
+      "remNACL6.lif - Image005-2.tif",
+      "remNACL6.lif - Image005-3.tif",
+      "remNACL6.lif - Image005-4.tif",
+      "remNACL6.lif - Image005-5.tif",
+      "remNACL6.lif - Image005-6.tif",
+      "remNACL6.lif - Image006-1.tif",
+      "remNACL6.lif - Image006-2.tif",
+      "remNACL6.lif - Image006-3.tif",
+      "remNACL6.lif - Image006-4.tif",
+      "remNACL6.lif - Image006-5.tif",
+      "remNACL6.lif - Image006-6.tif",
+      "remNACL6.lif - Image006-7.tif",
+      "remNACL6.lif - Image007-1.tif",
+      "remNACL6.lif - Image007-2.tif",
+      "remNACL6.lif - Image007-3.tif",
+      "remNACL6.lif - Image007-4.tif",
+      "remNACL6.lif - Image007-5.tif",
+      "remNACL6.lif - Image007-6.tif",
+      "remNACL6.lif - Image007-7.tif",
+      "remNACL6.lif - Image008-1.tif",
+      "remNACL6.lif - Image008-2.tif",
+      "remNACL6.lif - Image008-3.tif",
+      "remNACL6.lif - Image008-4.tif",
+      "remNACL6.lif - Image008-5.tif",
+      "remNACL6.lif - Image009-1.tif",
+      "remNACL6.lif - Image009-2.tif",
+      "remNACL6.lif - Image009-3.tif",
+      "remNACL6.lif - Image009-4.tif",
+      "remNACL6.lif - Image009-5.tif",
+      "remNACL6.lif - Image009-6.tif",
+      "remNACL6.lif - Image013-1.tif",
+      "remNACL6.lif - Image013-2.tif",
+      "remNACL7.lif - Image002-1.tif",
+      "remNACL7.lif - Image002-2.tif",
+      "remNACL7.lif - Image002-3.tif",
+      "remNACL7.lif - Image003-1.tif",
+      "remNACL7.lif - Image003-2.tif",
+      "remNACL7.lif - Image003-3.tif",
+      "remNACL7.lif - Image004-1.tif",
+      "remNACL7.lif - Image004-2.tif",
+      "remNACL7.lif - Image004-3.tif",
+      "remNACL7.lif - Image004-4.tif",
+      "remNACL7.lif - Image005-1.tif",
+      "remNACL7.lif - Image005-2.tif",
+      "remNACL7.lif - Image005-3.tif",
+      "remNACL7.lif - Image005-4.tif",
+      "remNACL7.lif - Image006-1.tif",
+      "remNACL7.lif - Image006-2.tif",
+      "remNACL7.lif - Image006-3.tif",
+      "remNACL7.lif - Image007-1.tif",
+      "remNACL7.lif - Image007-2.tif",
+      "remNACL7.lif - Image007-3.tif",
+      "remNACL7.lif - Image008-1.tif",
+      "remNACL7.lif - Image010-1.tif",
+      "remNACL7.lif - Image010-2.tif",
+      "remNACL7.lif - Image011-1.tif",
+      "remNACL7.lif - Image011-2.tif",
+      "remNACL7.lif - Image012-1.tif",
+      "remNACL7.lif - Image012-2.tif",
+      "remNACL7.lif - Image012-3.tif",
+      "REM_140NaCL1.lif - 120s-1.tif",
+      "REM_140NaCL1.lif - Image006-1.tif",
+      "REM_140NaCL1.lif - Image007-1.tif",
+      "REM_140NaCL1.lif - Image008-1.tif",
+      "REM_140NaCL1.lif - Image008-2.tif",
+      "REM_140NaCL1.lif - Image008-3.tif",
+      "REM_140NaCL1.lif - Image008-5.tif",
+      "REM_140NaCL1.lif - Image009-1.tif",
+      "REM_140NaCL1.lif - Image009-2.tif",
+      "REM_140NaCL1.lif - Image009-3.tif",
+      "REM_140NaCL1.lif - Image010-1.tif",
+      "REM_140NaCL1.lif - Image010-2.tif",
+      "REM_140NaCL1.lif - Image011-1.tif",
+      "REM_140NaCL1.lif - Image011-2.tif",
+      "REM_140NaCL1.lif - Image011-3.tif",
+      "REM_140NaCL1.lif - Image012-1.tif",
+      "REM_140NaCL1.lif - Image012-2.tif",
+      "REM_140NaCL1.lif - Image012-3.tif",
+      "REM_140NaCL1.lif - Image012-4.tif",
+      "REM_140NaCL1.lif - Image013-1.tif",
+      "REM_140NaCL1.lif - Image013-2.tif",
+      "REM_140NaCL1.lif - Image013-3.tif",
+      "REM_140NaCL1.lif - Image014-1.tif",
+      "rem_Sorbitol.lif - Image010-1.tif",
+      "rem_Sorbitol.lif - Image010-2.tif",
+      "rem_Sorbitol.lif - Image010-3.tif",
+      "rem_Sorbitol.lif - Image010-4.tif",
+      "rem_Sorbitol.lif - Image011-1.tif",
+      "rem_Sorbitol.lif - Image012-1.tif",
+      "rem_Sorbitol.lif - Image012-2.tif",
+      "rem_Sorbitol.lif - Image013-1.tif",
+      "rem_Sorbitol.lif - Image013-2.tif",
+      "rem_Sorbitol.lif - Image013-3.tif",
+      "rem_Sorbitol.lif - Image013-4.tif",
+      "rem_Sorbitol.lif - Image015-1.tif",
+      "rem_Sorbitol.lif - Image015-2.tif",
+      "rem_Sorbitol.lif - Image015-3.tif"
+   ],
+   "data":[
+      {
+         "x":-15.341506,
+         "y":9.682519
+      },
+      {
+         "x":-15.581093,
+         "y":11.674928
+      },
+      {
+         "x":-20.47025,
+         "y":23.360132
+      },
+      {
+         "x":-17.929787,
+         "y":19.347288
+      },
+      {
+         "x":-18.898935,
+         "y":15.644883
+      },
+      {
+         "x":-28.972054,
+         "y":12.121701
+      },
+      {
+         "x":-30.569517,
+         "y":15.885629
+      },
+      {
+         "x":-20.95647,
+         "y":10.8336935
+      },
+      {
+         "x":-19.608091,
+         "y":19.277744
+      },
+      {
+         "x":-20.160805,
+         "y":18.100067
+      },
+      {
+         "x":-18.177984,
+         "y":15.764217
+      },
+      {
+         "x":-20.653276,
+         "y":19.215939
+      },
+      {
+         "x":-25.424402,
+         "y":9.607459
+      },
+      {
+         "x":-17.443602,
+         "y":19.597649
+      },
+      {
+         "x":-19.691545,
+         "y":20.159431
+      },
+      {
+         "x":-17.350233,
+         "y":22.560944
+      },
+      {
+         "x":-16.274456,
+         "y":22.931667
+      },
+      {
+         "x":-15.031004,
+         "y":11.048626
+      },
+      {
+         "x":-13.108536,
+         "y":11.462547
+      },
+      {
+         "x":-13.474473,
+         "y":11.703431
+      },
+      {
+         "x":-15.604194,
+         "y":10.81493
+      },
+      {
+         "x":-17.239407,
+         "y":12.317539
+      },
+      {
+         "x":-30.875359,
+         "y":13.060763
+      },
+      {
+         "x":-26.251797,
+         "y":7.876443
+      },
+      {
+         "x":-18.772717,
+         "y":19.48979
+      },
+      {
+         "x":-22.392864,
+         "y":8.272695
+      },
+      {
+         "x":-21.12928,
+         "y":9.7767515
+      },
+      {
+         "x":-21.178583,
+         "y":21.674294
+      },
+      {
+         "x":-19.166931,
+         "y":22.384495
+      },
+      {
+         "x":-19.250772,
+         "y":21.86225
+      },
+      {
+         "x":-18.494062,
+         "y":22.283949
+      },
+      {
+         "x":-20.18853,
+         "y":21.85453
+      },
+      {
+         "x":-16.702082,
+         "y":23.601006
+      },
+      {
+         "x":-17.13574,
+         "y":23.747221
+      },
+      {
+         "x":-17.683197,
+         "y":21.587358
+      },
+      {
+         "x":-21.85966,
+         "y":7.7366138
+      },
+      {
+         "x":-16.07479,
+         "y":13.235925
+      },
+      {
+         "x":-22.044855,
+         "y":11.490602
+      },
+      {
+         "x":-24.064316,
+         "y":13.837085
+      },
+      {
+         "x":-17.394213,
+         "y":17.553621
+      },
+      {
+         "x":-14.229135,
+         "y":11.427004
+      },
+      {
+         "x":-13.97477,
+         "y":12.758248
+      },
+      {
+         "x":-28.289589,
+         "y":14.394258
+      },
+      {
+         "x":-29.733265,
+         "y":12.008939
+      },
+      {
+         "x":-28.923637,
+         "y":19.143003
+      },
+      {
+         "x":-24.930553,
+         "y":13.821273
+      },
+      {
+         "x":-30.744255,
+         "y":16.519615
+      },
+      {
+         "x":-29.407692,
+         "y":17.65162
+      },
+      {
+         "x":-30.794188,
+         "y":11.939506
+      },
+      {
+         "x":-26.686949,
+         "y":17.216633
+      },
+      {
+         "x":-31.109135,
+         "y":12.353005
+      },
+      {
+         "x":-27.557032,
+         "y":11.072172
+      },
+      {
+         "x":-26.44643,
+         "y":11.820937
+      },
+      {
+         "x":-26.56358,
+         "y":20.983603
+      },
+      {
+         "x":-31.904755,
+         "y":14.210965
+      },
+      {
+         "x":-32.62451,
+         "y":14.57555
+      },
+      {
+         "x":-27.0017,
+         "y":16.042553
+      },
+      {
+         "x":-29.092634,
+         "y":15.239548
+      },
+      {
+         "x":-28.362091,
+         "y":15.830856
+      },
+      {
+         "x":-27.62764,
+         "y":18.475376
+      },
+      {
+         "x":-32.083485,
+         "y":12.486399
+      },
+      {
+         "x":-29.553308,
+         "y":18.525095
+      },
+      {
+         "x":-30.185234,
+         "y":16.504131
+      },
+      {
+         "x":-28.118118,
+         "y":18.127306
+      },
+      {
+         "x":-29.113302,
+         "y":13.983968
+      },
+      {
+         "x":-26.854326,
+         "y":13.137048
+      },
+      {
+         "x":-27.813818,
+         "y":17.599186
+      },
+      {
+         "x":-32.699455,
+         "y":15.559938
+      },
+      {
+         "x":-22.243227,
+         "y":9.926602
+      },
+      {
+         "x":-26.833065,
+         "y":9.86732
+      },
+      {
+         "x":-17.621075,
+         "y":18.077911
+      },
+      {
+         "x":-26.92603,
+         "y":9.351093
+      },
+      {
+         "x":-19.554533,
+         "y":17.774937
+      },
+      {
+         "x":-23.385263,
+         "y":14.548591
+      },
+      {
+         "x":-18.026989,
+         "y":16.249737
+      },
+      {
+         "x":-22.191782,
+         "y":10.483406
+      },
+      {
+         "x":-23.742758,
+         "y":8.267215
+      },
+      {
+         "x":-22.456295,
+         "y":10.994548
+      },
+      {
+         "x":-26.33325,
+         "y":11.072863
+      },
+      {
+         "x":-23.055025,
+         "y":10.588535
+      },
+      {
+         "x":-25.33978,
+         "y":10.642876
+      },
+      {
+         "x":-18.959644,
+         "y":17.026634
+      },
+      {
+         "x":-17.89312,
+         "y":15.250022
+      },
+      {
+         "x":-11.99566,
+         "y":13.7956705
+      },
+      {
+         "x":-18.30724,
+         "y":10.280416
+      },
+      {
+         "x":-18.394365,
+         "y":11.44059
+      },
+      {
+         "x":-16.98614,
+         "y":14.974265
+      },
+      {
+         "x":-13.149164,
+         "y":13.86513
+      },
+      {
+         "x":-11.627966,
+         "y":13.866111
+      },
+      {
+         "x":-15.058782,
+         "y":13.219156
+      },
+      {
+         "x":-18.75546,
+         "y":10.608948
+      },
+      {
+         "x":-16.591938,
+         "y":13.54609
+      },
+      {
+         "x":-23.809256,
+         "y":8.955493
+      },
+      {
+         "x":-30.359667,
+         "y":12.835268
+      },
+      {
+         "x":-24.105099,
+         "y":14.8230095
+      },
+      {
+         "x":-27.742281,
+         "y":13.733738
+      },
+      {
+         "x":12.500883,
+         "y":-7.2937417
+      },
+      {
+         "x":17.371916,
+         "y":-3.5656834
+      },
+      {
+         "x":22.289076,
+         "y":-11.726337
+      },
+      {
+         "x":18.08079,
+         "y":-2.529572
+      },
+      {
+         "x":23.916899,
+         "y":-11.059316
+      },
+      {
+         "x":17.436405,
+         "y":-1.8025256
+      },
+      {
+         "x":7.808739,
+         "y":-0.011557321
+      },
+      {
+         "x":9.320625,
+         "y":1.5563545
+      },
+      {
+         "x":5.358452,
+         "y":2.187639
+      },
+      {
+         "x":6.6203423,
+         "y":2.9109197
+      },
+      {
+         "x":26.65225,
+         "y":-11.546229
+      },
+      {
+         "x":19.772306,
+         "y":-0.9460459
+      },
+      {
+         "x":5.7682624,
+         "y":7.7591877
+      },
+      {
+         "x":18.309505,
+         "y":-0.71064365
+      },
+      {
+         "x":18.773241,
+         "y":-1.7447023
+      },
+      {
+         "x":19.97521,
+         "y":-3.6161463
+      },
+      {
+         "x":18.44369,
+         "y":-4.1143775
+      },
+      {
+         "x":19.786066,
+         "y":-2.8257751
+      },
+      {
+         "x":12.187541,
+         "y":1.1241304
+      },
+      {
+         "x":8.209434,
+         "y":2.4005287
+      },
+      {
+         "x":17.146791,
+         "y":-0.74392116
+      },
+      {
+         "x":9.374899,
+         "y":-1.9323664
+      },
+      {
+         "x":8.425604,
+         "y":-1.3279475
+      },
+      {
+         "x":27.274519,
+         "y":-12.400129
+      },
+      {
+         "x":16.130268,
+         "y":-1.3313797
+      },
+      {
+         "x":11.778969,
+         "y":3.380013
+      },
+      {
+         "x":15.295774,
+         "y":1.1532285
+      },
+      {
+         "x":11.4487915,
+         "y":3.7720275
+      },
+      {
+         "x":27.326462,
+         "y":-13.509146
+      },
+      {
+         "x":15.65471,
+         "y":0.67488927
+      },
+      {
+         "x":16.215405,
+         "y":0.33176917
+      },
+      {
+         "x":20.35097,
+         "y":-2.2138345
+      },
+      {
+         "x":21.991163,
+         "y":-1.45577
+      },
+      {
+         "x":22.555933,
+         "y":-1.4448408
+      },
+      {
+         "x":24.355988,
+         "y":-11.579132
+      },
+      {
+         "x":24.832176,
+         "y":-12.864847
+      },
+      {
+         "x":21.894934,
+         "y":-13.771825
+      },
+      {
+         "x":19.559484,
+         "y":-6.9245524
+      },
+      {
+         "x":14.610339,
+         "y":-5.516481
+      },
+      {
+         "x":12.680191,
+         "y":-6.528358
+      },
+      {
+         "x":16.844461,
+         "y":-5.0403733
+      },
+      {
+         "x":10.468553,
+         "y":-0.104547665
+      },
+      {
+         "x":11.407291,
+         "y":-6.489076
+      },
+      {
+         "x":2.18238,
+         "y":-11.211761
+      },
+      {
+         "x":2.1250882,
+         "y":-12.814243
+      },
+      {
+         "x":2.827597,
+         "y":-11.788916
+      },
+      {
+         "x":5.2512083,
+         "y":-2.2157657
+      },
+      {
+         "x":9.240811,
+         "y":-4.762177
+      },
+      {
+         "x":-3.0844014,
+         "y":-0.16408683
+      },
+      {
+         "x":11.413751,
+         "y":-4.4818106
+      },
+      {
+         "x":12.502864,
+         "y":-3.988568
+      },
+      {
+         "x":9.917878,
+         "y":-0.36450437
+      },
+      {
+         "x":10.815162,
+         "y":-4.3072085
+      },
+      {
+         "x":6.702827,
+         "y":1.5163186
+      },
+      {
+         "x":0.5948568,
+         "y":-10.732742
+      },
+      {
+         "x":-0.6763141,
+         "y":-0.7148707
+      },
+      {
+         "x":5.2243185,
+         "y":2.067199
+      },
+      {
+         "x":1.0453708,
+         "y":0.99906266
+      },
+      {
+         "x":-0.47516644,
+         "y":-0.04820272
+      },
+      {
+         "x":3.8146784,
+         "y":2.8220716
+      },
+      {
+         "x":10.339769,
+         "y":-3.0048034
+      },
+      {
+         "x":-2.7952228,
+         "y":-2.8034894
+      },
+      {
+         "x":-1.8640413,
+         "y":1.06816
+      },
+      {
+         "x":1.4309566,
+         "y":-11.738648
+      },
+      {
+         "x":0.8908199,
+         "y":-11.407275
+      },
+      {
+         "x":8.210284,
+         "y":-4.865074
+      },
+      {
+         "x":4.662406,
+         "y":-1.4905514
+      },
+      {
+         "x":3.1944454,
+         "y":-1.6712412
+      },
+      {
+         "x":13.637937,
+         "y":-0.7603182
+      },
+      {
+         "x":27.26002,
+         "y":-10.180418
+      },
+      {
+         "x":11.267343,
+         "y":-7.6410866
+      },
+      {
+         "x":11.701003,
+         "y":-8.836633
+      },
+      {
+         "x":21.590237,
+         "y":-14.379344
+      },
+      {
+         "x":17.612646,
+         "y":-6.3974247
+      },
+      {
+         "x":17.709793,
+         "y":-5.281165
+      },
+      {
+         "x":17.770824,
+         "y":-7.2496724
+      },
+      {
+         "x":25.859907,
+         "y":-10.103563
+      },
+      {
+         "x":25.835573,
+         "y":-9.933197
+      },
+      {
+         "x":5.24554,
+         "y":-7.42349
+      },
+      {
+         "x":3.2812998,
+         "y":-7.026569
+      },
+      {
+         "x":5.0535493,
+         "y":-8.06636
+      },
+      {
+         "x":5.8412056,
+         "y":-7.7606664
+      },
+      {
+         "x":6.3987093,
+         "y":-7.7600746
+      },
+      {
+         "x":3.1384754,
+         "y":-6.9936295
+      },
+      {
+         "x":-0.61005706,
+         "y":-1.8609912
+      },
+      {
+         "x":5.225346,
+         "y":-15.668883
+      },
+      {
+         "x":-0.37508157,
+         "y":-3.1282737
+      },
+      {
+         "x":4.5552597,
+         "y":-14.557128
+      },
+      {
+         "x":1.0092628,
+         "y":-2.7598414
+      },
+      {
+         "x":14.19383,
+         "y":-11.186282
+      },
+      {
+         "x":13.752137,
+         "y":-12.805424
+      },
+      {
+         "x":18.327633,
+         "y":-17.516636
+      },
+      {
+         "x":18.164234,
+         "y":-17.338959
+      },
+      {
+         "x":11.169314,
+         "y":-8.439155
+      },
+      {
+         "x":0.2989894,
+         "y":-1.935481
+      },
+      {
+         "x":8.863901,
+         "y":-12.707656
+      },
+      {
+         "x":20.624695,
+         "y":-12.823754
+      },
+      {
+         "x":18.040003,
+         "y":-12.214257
+      },
+      {
+         "x":15.312619,
+         "y":-10.970779
+      },
+      {
+         "x":9.720821,
+         "y":-11.744419
+      },
+      {
+         "x":12.402383,
+         "y":-10.242298
+      },
+      {
+         "x":19.5183,
+         "y":-12.448214
+      },
+      {
+         "x":23.503588,
+         "y":-9.995215
+      },
+      {
+         "x":19.396837,
+         "y":-11.416209
+      },
+      {
+         "x":18.729176,
+         "y":-13.1336
+      },
+      {
+         "x":23.58238,
+         "y":-12.967447
+      },
+      {
+         "x":21.05315,
+         "y":-10.349283
+      },
+      {
+         "x":20.187708,
+         "y":-14.242372
+      },
+      {
+         "x":7.5281014,
+         "y":-11.723007
+      },
+      {
+         "x":7.9964986,
+         "y":-13.38083
+      },
+      {
+         "x":19.424597,
+         "y":-15.332093
+      },
+      {
+         "x":21.49396,
+         "y":-12.353004
+      },
+      {
+         "x":21.276299,
+         "y":-11.932323
+      },
+      {
+         "x":24.52135,
+         "y":-15.687344
+      },
+      {
+         "x":25.105564,
+         "y":-13.798277
+      },
+      {
+         "x":25.10493,
+         "y":-15.031777
+      },
+      {
+         "x":25.314333,
+         "y":-14.429819
+      },
+      {
+         "x":19.58211,
+         "y":-10.261198
+      },
+      {
+         "x":18.792841,
+         "y":-11.365438
+      },
+      {
+         "x":7.2263217,
+         "y":-14.740425
+      },
+      {
+         "x":3.9783983,
+         "y":-12.6138735
+      },
+      {
+         "x":6.471402,
+         "y":-13.408583
+      },
+      {
+         "x":22.746023,
+         "y":-13.681323
+      },
+      {
+         "x":19.384525,
+         "y":-14.546913
+      },
+      {
+         "x":15.272168,
+         "y":-11.741957
+      },
+      {
+         "x":20.13399,
+         "y":-11.252466
+      },
+      {
+         "x":8.455873,
+         "y":-10.577757
+      },
+      {
+         "x":16.377205,
+         "y":-2.114884
+      },
+      {
+         "x":28.50219,
+         "y":-9.789208
+      },
+      {
+         "x":28.200535,
+         "y":-9.887165
+      },
+      {
+         "x":9.263675,
+         "y":-15.477194
+      },
+      {
+         "x":4.0006304,
+         "y":-15.881092
+      },
+      {
+         "x":9.258777,
+         "y":-15.677063
+      },
+      {
+         "x":6.210656,
+         "y":-13.535974
+      },
+      {
+         "x":12.175566,
+         "y":-20.200926
+      },
+      {
+         "x":5.029698,
+         "y":-2.7820597
+      },
+      {
+         "x":16.58847,
+         "y":-17.58489
+      },
+      {
+         "x":11.999971,
+         "y":-13.166362
+      },
+      {
+         "x":11.531843,
+         "y":-11.078183
+      },
+      {
+         "x":14.197998,
+         "y":-14.823366
+      },
+      {
+         "x":12.221962,
+         "y":-20.21842
+      },
+      {
+         "x":10.643788,
+         "y":-9.900255
+      },
+      {
+         "x":14.67043,
+         "y":-16.116367
+      },
+      {
+         "x":6.7712884,
+         "y":-1.759551
+      },
+      {
+         "x":10.928526,
+         "y":-11.875935
+      },
+      {
+         "x":5.4803653,
+         "y":-16.45041
+      },
+      {
+         "x":3.8633995,
+         "y":-3.574941
+      },
+      {
+         "x":10.235615,
+         "y":-8.203339
+      },
+      {
+         "x":13.995652,
+         "y":-14.558356
+      },
+      {
+         "x":9.361589,
+         "y":-8.0155525
+      },
+      {
+         "x":1.0908439,
+         "y":-12.905404
+      },
+      {
+         "x":15.866923,
+         "y":-18.063015
+      },
+      {
+         "x":15.9624,
+         "y":-17.51019
+      },
+      {
+         "x":16.79266,
+         "y":-18.653616
+      },
+      {
+         "x":10.304433,
+         "y":-13.084293
+      },
+      {
+         "x":0.50371164,
+         "y":7.7948046
+      },
+      {
+         "x":0.6216379,
+         "y":9.13417
+      },
+      {
+         "x":0.916992,
+         "y":8.235828
+      },
+      {
+         "x":-13.925495,
+         "y":9.518784
+      },
+      {
+         "x":7.7974143,
+         "y":-4.4761066
+      },
+      {
+         "x":3.8497846,
+         "y":-3.8238451
+      },
+      {
+         "x":3.9055026,
+         "y":-13.9557905
+      },
+      {
+         "x":-1.5640728,
+         "y":-3.4723382
+      },
+      {
+         "x":-2.5043283,
+         "y":-4.458944
+      },
+      {
+         "x":-3.0874186,
+         "y":0.93683726
+      },
+      {
+         "x":0.050386526,
+         "y":-4.110237
+      },
+      {
+         "x":-2.1290784,
+         "y":-2.0774746
+      },
+      {
+         "x":-0.0046735555,
+         "y":-0.730911
+      },
+      {
+         "x":-2.1873167,
+         "y":-0.36717308
+      },
+      {
+         "x":-0.20082076,
+         "y":5.7205315
+      },
+      {
+         "x":0.48753792,
+         "y":4.9839635
+      },
+      {
+         "x":3.2752998,
+         "y":5.424978
+      },
+      {
+         "x":-0.95502836,
+         "y":5.9939733
+      },
+      {
+         "x":0.01960767,
+         "y":9.0102
+      },
+      {
+         "x":-0.18385041,
+         "y":3.9733846
+      },
+      {
+         "x":0.28655845,
+         "y":3.3350966
+      },
+      {
+         "x":-0.17572011,
+         "y":8.14594
+      },
+      {
+         "x":5.15704,
+         "y":6.708195
+      },
+      {
+         "x":5.3748903,
+         "y":7.183256
+      },
+      {
+         "x":6.584458,
+         "y":5.77372
+      },
+      {
+         "x":7.3489885,
+         "y":1.6897427
+      },
+      {
+         "x":10.427993,
+         "y":4.438321
+      },
+      {
+         "x":9.647045,
+         "y":3.6809907
+      },
+      {
+         "x":-19.385662,
+         "y":23.613861
+      },
+      {
+         "x":4.6961927,
+         "y":-0.26358026
+      },
+      {
+         "x":-1.0765944,
+         "y":0.35599428
+      },
+      {
+         "x":-3.7375307,
+         "y":2.9694839
+      },
+      {
+         "x":-3.5956275,
+         "y":3.5595624
+      },
+      {
+         "x":1.7976956,
+         "y":2.7984803
+      },
+      {
+         "x":-1.071609,
+         "y":7.5461903
+      },
+      {
+         "x":4.2224374,
+         "y":3.8295739
+      },
+      {
+         "x":1.1857581,
+         "y":3.4667315
+      },
+      {
+         "x":-1.437596,
+         "y":4.3521223
+      },
+      {
+         "x":-1.4405162,
+         "y":5.7661614
+      },
+      {
+         "x":-1.0271022,
+         "y":5.114615
+      }
+   ]
+};
+
+new Chart("myChart", {
+  type: "scatter",
+  data: {
+    labels: struct.labels,
+    datasets: [{
+      pointRadius: 4,
+      pointBackgroundColor: [
+        "rgb(0,0,255)",
+        "rgb(0,255,0)"
+      ],
+      data: struct.data
+    }]
+  },
+  options: {
+    tooltips: {
+         callbacks: {
+            label: function(tooltipItem, data) {
+               var label = data.labels[tooltipItem.index];
+               return label + ': (' + tooltipItem.xLabel + ', ' + tooltipItem.yLabel + ')';
+            }
+         }
+      },
+    legend: {display: false},
+  }
+});
+</script>
+
+</body>
+</html>
+
+
+
