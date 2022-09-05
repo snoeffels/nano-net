@@ -17,20 +17,21 @@
           </v-stepper-step>
           <v-stepper-content step="1">
             <v-file-input
-                @click.prevent="pickFolder"
-                @click:clear="fileInputValue = null"
-                label="File input"
+                @click.prevent="selectInputFolder"
+                @click:clear="fileInputValue = null; fileOutputValue = null"
+                label="Input"
                 :value="fileInputValue"
-            ></v-file-input>
+            />
 
             <v-btn
+                small
                 color="primary"
                 @click="e6 = 2"
                 :disabled="!fileInputValue"
             >
               Next
             </v-btn>
-            <v-btn outlined @click="$emit('back')" class="ml-3">
+            <v-btn text small @click="$emit('back')" class="ml-3">
               Home
             </v-btn>
           </v-stepper-content>
@@ -44,18 +45,22 @@
             <small>Summarize if needed</small>
           </v-stepper-step>
           <v-stepper-content step="2">
-            <v-card
-                color="grey lighten-1"
-                class="mb-12"
-                height="200px"
-            ></v-card>
+            <v-text-field
+                v-model="globals.pixel"
+                class="mt-0 pt-0"
+                type="number"
+                step="0.01"
+                style="width: 60px"
+            />
+
             <v-btn
+                small
                 color="primary"
-                @click="e6 = 3"
+                @click="setPixel"
             >
               Next
             </v-btn>
-            <v-btn text @click="e6 = 1">
+            <v-btn text small @click="e6 = 1" class="ml-3">
               Back
             </v-btn>
           </v-stepper-content>
@@ -69,18 +74,41 @@
             <small>Summarize if needed</small>
           </v-stepper-step>
           <v-stepper-content step="3">
-            <v-card
-                color="grey lighten-1"
-                class="mb-12"
-                height="200px"
-            ></v-card>
+            <v-checkbox
+                class="ml-2"
+                :input-value="globals.display"
+                @change="globals.display = !globals.display; setDisplayResults()"
+                label="Display segmentations while processing"
+            />
+
+            <!--            <v-tooltip bottom>-->
+            <!--              <template #activator="{ on }">-->
+            <!--                <v-icon color="red" class="mr-1" v-on="on">fab fa-youtube</v-icon>-->
+            <!--              </template>-->
+            <!--              <span><p>-->
+            <!--              image: explanation...<br>-->
+            <!--              thresh3: explanation...<br>-->
+            <!--              closed3: explanation...<br>-->
+            <!--              cleared3: explanation...<br>-->
+            <!--              rect_w: explanation...<br>-->
+            <!--            </p></span>-->
+            <!--            </v-tooltip>-->
+
+            <v-file-input
+                @click.prevent="selectOutputFolder"
+                @click:clear="fileOutputValue = null"
+                label="Output"
+                :value="fileOutputValue"
+            />
             <v-btn
+                small
                 color="primary"
-                @click="e6 = 4"
+                @click="run"
+                :disabled="!fileOutputValue"
             >
               Next
             </v-btn>
-            <v-btn text @click="e6 = 2">
+            <v-btn text small @click="e6 = 2" class="ml-3">
               Back
             </v-btn>
           </v-stepper-content>
@@ -91,19 +119,25 @@
             <small>Summarize if needed</small>
           </v-stepper-step>
           <v-stepper-content step="4">
-            <v-card
-                color="grey lighten-1"
-                class="mb-12"
-                height="200px"
-            ></v-card>
+            <h3>Done!</h3>
+            <p>
+              Thanks for using....
+              Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore
+              et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum.
+              Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
+            </p>
             <v-btn
+                small
                 color="primary"
-                @click="e6 = 1"
+                @click="console.log('rerun')"
             >
-              Done
+              Rerun
             </v-btn>
-            <v-btn text @click="e6 = 3">
+            <v-btn text small @click="e6 = 3" class="ml-3">
               Back
+            </v-btn>
+            <v-btn text small @click="$emit('back')" class="ml-3">
+              Home
             </v-btn>
           </v-stepper-content>
         </v-stepper>
@@ -118,11 +152,16 @@ export default {
   data() {
     return {
       e6: 1,
-      fileInputValue: null
+      fileInputValue: null,
+      fileOutputValue: null,
+      globals: {
+        pixel: 9.02,
+        display: false
+      }
     }
   },
   methods: {
-    pickFolder() {
+    selectInputFolder() {
       if (typeof eel === 'undefined') {
         this.fileInputValue = new File(["dummy"], "dummy/path");
         return;
@@ -130,9 +169,50 @@ export default {
 
       var that = this;
       // eslint-disable-next-line no-undef
-      eel.select_folder()(function (path) {
+      eel.select_ms_path()(function (path) {
         that.fileInputValue = new File(["folder"], path);
       })
+    },
+    selectOutputFolder() {
+      if (typeof eel === 'undefined') {
+        this.fileOutputValue = new File(["dummy"], "dummy/path");
+        return;
+      }
+
+      var that = this;
+      // eslint-disable-next-line no-undef
+      eel.select_output_path()(function (path) {
+        that.fileOutputValue = new File(["folder"], path);
+      })
+    },
+    setPixel() {
+      this.e6 = 3;
+      if (typeof eel === 'undefined') {
+        return;
+      }
+
+      // eslint-disable-next-line no-undef
+      eel.set_pixel(this.globals.pixel);
+    },
+    setDisplayResults() {
+      if (typeof eel === 'undefined') {
+        return;
+      }
+
+      // eslint-disable-next-line no-undef
+      eel.set_display_results(this.globals.display);
+    },
+    run() {
+      if (this.e6 === 3) {
+        this.e6 = 4;
+      }
+
+      if (typeof eel === 'undefined') {
+        return;
+      }
+
+      // eslint-disable-next-line no-undef
+      eel.run_same_nds();
     }
   },
 }

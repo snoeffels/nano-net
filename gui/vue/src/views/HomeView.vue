@@ -24,7 +24,7 @@
               </v-col>
 
               <v-col cols="6">
-                <h3>Same NDs</h3>
+                <h3>Different NDs</h3>
                 <p class="text-sm-body-2">
                   Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut
                   labore

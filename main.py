@@ -67,7 +67,7 @@ def paths(mypath):
         mean = image[i].mean()
 
         props4, arry_im, list_size4, mean_area, var_size, density, list_fluo, list_relative_fluo, mean_fluo, var_fluo, list_intensity_max, mean_intensity_max, list_intensity_min, mean_intensity_min, list_area_filled, mean_area_filled, list_axis_major_length, mean_axis_major_length, list_axis_minor_length, mean_axis_minor_length, list_eccentricity, mean_eccentricity, list_equivalent_diameter_area, mean_equivalent_diameter_area, list_perimeter, mean_perimeter, list_label, sum_label, image, thresh3, closed3, cleared3, image_label_overlay4, label_image4 = mybin(
-            image, pixel)
+            image, PIXEL)
 
         pic(image, thresh3, closed3, cleared3, image_label_overlay4, label_image4, name, mypath, seg)
         columns = ["name", "area", "mean_area", "var_area", "density", "intensity", "relative_intensity",
@@ -452,7 +452,7 @@ def paths_plot(mypath):
         mean = image[i].mean()
 
         props4, arry_im, list_size4, mean_area, var_size, density, list_fluo, list_relative_fluo, mean_fluo, var_fluo, list_intensity_max, mean_intensity_max, list_intensity_min, mean_intensity_min, list_area_filled, mean_area_filled, list_axis_major_length, mean_axis_major_length, list_axis_minor_length, mean_axis_minor_length, list_eccentricity, mean_eccentricity, list_equivalent_diameter_area, mean_equivalent_diameter_area, list_perimeter, mean_perimeter, list_label, sum_label, image, thresh3, closed3, cleared3, image_label_overlay4, label_image4 = mybin(
-            image, pixel)
+            image, PIXEL)
         # print(arry_im)
         columns = ["name", "area", "mean_area", "var_area", "density", "intensity", "relative_intensity",
                    "mean_intesity", "var_intesity", "max_intesity", "mean_max_intesity", "min_intesity",
@@ -677,7 +677,7 @@ REM_MS_PATH = PATH_SEPERATOR.join([".", "rem_ms"])
 
 condi_list = ["MS", "NaCl"]
 
-pixel = 9.02  # enter pixels of your image (can check this in fiji)
+PIXEL = 9.02  # enter pixels of your image (can check this in fiji)
 
 # semua([REM_NACL_PATH, REM_MS_PATH], condi_list)  # get tsne, knn, boxplot between all conditions
 
