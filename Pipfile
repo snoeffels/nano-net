@@ -18,6 +18,7 @@ pillow = "*"
 xlsxwriter = "*"
 sklearn = "*"
 eel = "*"
+tk = "*"
 
 [dev-packages]
 

@@ -4,11 +4,36 @@
       <v-container>
         <v-row>
           <v-col cols="12">
-            <h1>Which way do you want to go?</h1>
+            <h2>Welcome</h2>
+            <p class="text-sm-body-2">
+              Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore
+              et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum.
+            </p>
             <v-row>
-              <v-col cols="12">
-                <button class="btn-primary mr-3" @click="sameNDs=true">Segmentation and feature extraction of same NDs</button>
-                <button class="btn-primary mr-3" @click="differentNDs=true">Comparison between different NDs</button>
+              <v-col cols="6">
+                <h3>Same NDs</h3>
+                <p class="text-sm-body-2">
+                  Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut
+                  labore
+                  et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea
+                  rebum.
+                </p>
+                <v-btn small color="primary" @click="sameNDs=true">
+                  Start
+                </v-btn>
+              </v-col>
+
+              <v-col cols="6">
+                <h3>Same NDs</h3>
+                <p class="text-sm-body-2">
+                  Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut
+                  labore
+                  et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea
+                  rebum.
+                </p>
+                <v-btn small color="primary" @click="differentNDs=true">
+                  Start
+                </v-btn>
               </v-col>
             </v-row>
           </v-col>
@@ -16,8 +41,8 @@
       </v-container>
     </div>
     <div>
-      <SameNDs v-if="sameNDs" class="mt-5"/>
-      <DifferentNDs v-if="differentNDs" class="mt-5"/>
+      <SameNDs v-if="sameNDs" @back="sameNDs=false" class="mt-5"/>
+      <DifferentNDs v-if="differentNDs" @back="differentNDs=false" class="mt-5"/>
     </div>
   </div>
 </template>

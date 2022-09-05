@@ -2,7 +2,7 @@
 import sys
 import skimage
 from glob import glob
-import imageio as iio
+import imageio.v2 as iio
 from skimage.segmentation import clear_border
 from skimage.measure import label, regionprops
 from skimage.morphology import closing
@@ -26,7 +26,7 @@ import seaborn as sns
 
 from sklearn.manifold import TSNE
 from sklearn import preprocessing
-from scipy.ndimage.filters import gaussian_filter
+from scipy.ndimage import gaussian_filter
 import statistics
 
 from sklearn.model_selection import train_test_split
@@ -114,7 +114,6 @@ def paths(mypath):
                 writer.save()
                 writer.close()
             else:
-
                 workbook = openpyxl.load_workbook(out_path)  # load workbook if already exists
                 sheet = workbook['Sheet1']  # declare the active sheet
                 for row in dataframe_to_rows(data, header=False, index=False):
@@ -163,7 +162,7 @@ def pic(image, thresh3, closed3, cleared3, image_label_overlay4, label_image4, n
     pic_path = os.path.join(mypath, name)
     pic_path2 = pic_path + str(seg) + ".png"
     plt.savefig(pic_path2)
-    plt.show()
+    # plt.show() # show after creation
 
 
 ##################################################################### for many statistics:
@@ -680,11 +679,11 @@ condi_list = ["MS", "NaCl"]
 
 pixel = 9.02  # enter pixels of your image (can check this in fiji)
 
-semua([REM_NACL_PATH, REM_MS_PATH], condi_list)  # get tsne, knn, boxplot between all conditions
+# semua([REM_NACL_PATH, REM_MS_PATH], condi_list)  # get tsne, knn, boxplot between all conditions
 
 paths(REM_MS_PATH)  # get excel, pictures from 1 condition
 
-# l=list of paths containing the images to be quantified and compared togehter
+# l=list of paths containing the images to be quantified and compared together
 # condi_list=list of conditions corresponding to the paths in l
 # order= list of conditions in the order you want them to appear in the plot
 
