@@ -44,7 +44,7 @@ print(skimage.__version__)
 # %reset
 
 
-########################################### get excel and pictures:
+    ########################################### get excel and pictures:
 def paths(mypath):
     p = []
     names = []

@@ -1,3 +1,4 @@
+import json
 import os
 import statistics
 import tkinter
@@ -96,6 +97,7 @@ def select_folder_tk():
     root = tkinter.Tk()
     root.attributes("-topmost", True)
     root.withdraw()
+    # TODO handle cancel event
     return filedialog.askdirectory()
 
 
@@ -110,6 +112,13 @@ def set_display_results(d):
 @eel.expose
 def run_same_nds():
     paths(REM_MS_PATH)
+
+
+@eel.expose
+def print_object(v):
+    print(json.dumps(v, indent=4))
+    for keys, values in v.items():
+        print(str(keys) + " : " + str(v[keys]))
 
 
 ##############################################################
@@ -135,16 +144,16 @@ def paths(mypath):
         name = names[i]
         b = glob(p[i])
         image = iio.imread(b[0])
-        props4, arry_im, list_size4, mean_area, var_size, density, list_fluo, list_relative_fluo, mean_fluo, var_fluo, list_intensity_max, mean_intensity_max, list_intensity_min, mean_intensity_min, list_area_filled, mean_area_filled, list_axis_major_length, mean_axis_major_length, list_axis_minor_length, mean_axis_minor_length, list_eccentricity, mean_eccentricity, list_equivalent_diameter_area, mean_equivalent_diameter_area, list_perimeter, mean_perimeter, list_label, sum_label, image, thresh3, closed3, cleared3, image_label_overlay4, label_image4 = mybin(
+        props4, arry_im, list_size4, mean_area, var_size, density, list_fluo, list_relative_fluo, mean_fluo, var_fluo, list_intensity_max, mean_intensity_max, list_intensity_min, mean_intensity_min, list_area_filled, mean_area_filled, list_axis_major_length, mean_axis_major_length, list_axis_minor_length, mean_axis_minor_length, list_eccentricity, mean_eccentricity, list_equivalent_diameter_area, mean_equivalent_diameter_area, list_perimeter, mean_perimeter, list_label, sum_label, image, thresh3, closed3, cleared3, image_label_overlay4, label_image4, sci, density_microns = mybin(
             image, PIXEL)
 
         pic(image, thresh3, closed3, cleared3, image_label_overlay4, label_image4, name, mypath, seg)
         columns = ["name", "area", "mean_area", "var_area", "density", "intensity", "relative_intensity",
-                   "mean_intesity", "var_intesity", "max_intesity", "mean_max_intesity", "min_intesity",
+                   "mean_intensity", "var_intensity", "max_intensity", "mean_max_intensity", "min_intensity",
                    "mean_min_intensity", "area_filled", "mean_area_filled", "major_axis_length",
                    "mean_major_axis_length", "minor_axis_length", "mean_minor_axis_length", "eccentricity",
                    "mean_eccentricity", "equivalent_diameter_area", "mean_equivalent_diameter_area", "perimeter",
-                   "mean_perimeter", "label", "sum_label"]
+                   "mean_perimeter", "nano_domain_id", "nano_domain_quantity", "sci", "density_microns"]
         new = list_size4
         if len(list_size4) > 0:
             for j in range(len(list_size4)):
@@ -153,13 +162,13 @@ def paths(mypath):
                           mean_intensity_min, list_area_filled[j], mean_area_filled, list_axis_major_length[j],
                           mean_axis_major_length, list_axis_minor_length[j], mean_axis_minor_length,
                           list_eccentricity[j], mean_eccentricity, list_equivalent_diameter_area[j],
-                          mean_equivalent_diameter_area, list_perimeter[j], mean_perimeter, list_label[j], sum_label]
+                          mean_equivalent_diameter_area, list_perimeter[j], mean_perimeter, list_label[j], sum_label, sci, density_microns]
 
             rows = new
             data = pd.DataFrame(rows, columns=columns)
 
         else:
-            new = [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]
+            new = [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]
             new[0][0] = name
 
             rows = new
@@ -242,12 +251,12 @@ def semua(l, order):
     df_list = [0] * len(l)
     names_all = [0] * len(l)
     arry_l = [0] * len(l)
-    länge = [0] * len(l)
+    laenge = [0] * len(l)
     for num, kata in enumerate(l):
         df_list[num], names_all[num], arry_l[num] = paths_plot(kata)
         df_all = df_all.append(df_list[num], ignore_index=True)
 
-        länge[num] = df_list[num].shape[0]
+        laenge[num] = df_list[num].shape[0]
 
     for i in range(len(arry_l)):
 
@@ -276,7 +285,7 @@ def semua(l, order):
 
     condi_df = []
     for i, j in enumerate(CONDI_LIST):
-        condi_df.append(länge[i] * [j])
+        condi_df.append(laenge[i] * [j])
 
     condi_df2 = []
     for i, j in enumerate(condi_df):
@@ -285,12 +294,12 @@ def semua(l, order):
 
     df_all["condition"] = condi_df2
 
-    d = plots_all(df_all, order)
+    plots_all(df_all, order)
     plot_correlation(df_all)
 
     arry_all, names_all2, condition2 = tsn_all(arry_all, names_all2, condition2)
-    knn_classifier = knn_all(arry_all, condition2, order)
-    forest(arry_all, condition2, df_all, order)
+    knn_all(arry_all, condition2, order)
+    forest(arry_all, condition2, order)
 
     return arry_all, names_all2, condition2
 
@@ -309,14 +318,14 @@ def tsn_all(arry_all, names_all2, condition2):  # tnse
     y = tsne[:, 1]
 
     df = pd.DataFrame(dict(x=x, y=y, label=condition2, img_name=names_all2))
-    groups = df.groupby('label')
+    df.groupby('label')
 
     sns.scatterplot(x="x", y="y", hue="label", data=df, palette="Paired")
     for i in range(df.shape[0]):
         plt.text(x=df.x[i] + 0.3, y=df.y[i] + 0.3, s=df.img_name[i])
 
     fig_dims = (10, 10)
-    fig, ax = plt.subplots(figsize=fig_dims)
+    plt.subplots(figsize=fig_dims)
     sns.scatterplot(x="x", y="y", hue="label", data=df, palette="Paired")
 
     return arry_all, names_all2, condition2
@@ -379,11 +388,11 @@ def knn_all(arry_all, condition2, order):
     sns.set_style("white")
 
     fig_dims = (6, 6)
-    fig, ax = plt.subplots(figsize=fig_dims)
+    plt.subplots(figsize=fig_dims)
     sns.scatterplot(X_test[:, 0], X_test[:, 6], hue=predicted, hue_order=order, s=50, palette="Paired")
 
     fig_dims = (6, 6)
-    fig, ax = plt.subplots(figsize=fig_dims)
+    plt.subplots(figsize=fig_dims)
     sns.scatterplot(X_test[:, 0], X_test[:, 6], hue=y_test, s=50, hue_order=order, palette="Paired")
 
     plt.show()
@@ -392,10 +401,10 @@ def knn_all(arry_all, condition2, order):
     return arry_all, condition2
 
 
-def forest(arry_all, condition2, df_all, order):
+def forest(arry_all, condition2, order):
     arr_col = ["me", "var", "mean_blur", "var_blur", "mean_fluo", "var_fluo", "mean_size", "var_size", "mean_int_max",
                "mean_int_min", "area_filled", "major_axis", "minor_axis", "eccentricity", "equivalent_diameter",
-               "perimeter", "sum_label", "density", "relative_fluo"]
+               "perimeter", "nano_domain_quantity", "density", "relative_fluo", "density_microns"]
 
     condition2 = np.array(condition2)
 
@@ -443,7 +452,7 @@ def forest(arry_all, condition2, df_all, order):
     ### tree that works: plot of the decision tree
     fn = arr_col
     cn = condition2
-    fig, axes = plt.subplots(nrows=1, ncols=1, figsize=(4, 4), dpi=800)
+    plt.subplots(nrows=1, ncols=1, figsize=(4, 4), dpi=800)
     tree.plot_tree(clf.estimators_[0],
                    feature_names=fn,
                    class_names=cn,
@@ -480,8 +489,8 @@ def plots_all(df_all, order):  # boxplots
     plt.ylabel('fluorescence')
 
     plt.subplot(1, 4, 4)  # index 4
-    sns.boxplot(x="condition", y="mean_intesity", data=df_all, order=order, palette="Paired")
-    sns.swarmplot(x="condition", y="mean_intesity", data=df_all, order=order, color="0.75", alpha=0.5, size=2)
+    sns.boxplot(x="condition", y="mean_intensity", data=df_all, order=order, palette="Paired")
+    sns.swarmplot(x="condition", y="mean_intensity", data=df_all, order=order, color="0.75", alpha=0.5, size=2)
     plt.title("mean intensity")
     plt.xlabel('condition')
     plt.ylabel('mean intensity')
@@ -514,21 +523,18 @@ def paths_plot(mypath):
     for i in range(len(p)):
 
         name = names[i]
-        # print(name)
         b = glob(p[i])
-
         image = iio.imread(b[0])
-        mean = image[i].mean()
 
-        props4, arry_im, list_size4, mean_area, var_size, density, list_fluo, list_relative_fluo, mean_fluo, var_fluo, list_intensity_max, mean_intensity_max, list_intensity_min, mean_intensity_min, list_area_filled, mean_area_filled, list_axis_major_length, mean_axis_major_length, list_axis_minor_length, mean_axis_minor_length, list_eccentricity, mean_eccentricity, list_equivalent_diameter_area, mean_equivalent_diameter_area, list_perimeter, mean_perimeter, list_label, sum_label, image, thresh3, closed3, cleared3, image_label_overlay4, label_image4 = mybin(
+        props4, arry_im, list_size4, mean_area, var_size, density, list_fluo, list_relative_fluo, mean_fluo, var_fluo, list_intensity_max, mean_intensity_max, list_intensity_min, mean_intensity_min, list_area_filled, mean_area_filled, list_axis_major_length, mean_axis_major_length, list_axis_minor_length, mean_axis_minor_length, list_eccentricity, mean_eccentricity, list_equivalent_diameter_area, mean_equivalent_diameter_area, list_perimeter, mean_perimeter, list_label, sum_label, image, thresh3, closed3, cleared3, image_label_overlay4, label_image4, sci, density_microns = mybin(
             image, PIXEL)
         # print(arry_im)
         columns = ["name", "area", "mean_area", "var_area", "density", "intensity", "relative_intensity",
-                   "mean_intesity", "var_intesity", "max_intesity", "mean_max_intesity", "min_intesity",
+                   "mean_intensity", "var_intensity", "max_intensity", "mean_max_intensity", "min_intensity",
                    "mean_min_intensity", "area_filled", "mean_area_filled", "major_axis_length",
                    "mean_major_axis_length", "minor_axis_length", "mean_minor_axis_length", "eccentricity",
                    "mean_eccentricity", "equivalent_diameter_area", "mean_equivalent_diameter_area", "perimeter",
-                   "mean_perimeter", "label", "sum_label"]
+                   "mean_perimeter", "label", "sum_label", "SCI", "density_microns"]
         new = list_size4
         if len(list_size4) > 0:
             for j in range(len(list_size4)):
@@ -537,12 +543,13 @@ def paths_plot(mypath):
                           mean_intensity_min, list_area_filled[j], mean_area_filled, list_axis_major_length[j],
                           mean_axis_major_length, list_axis_minor_length[j], mean_axis_minor_length,
                           list_eccentricity[j], mean_eccentricity, list_equivalent_diameter_area[j],
-                          mean_equivalent_diameter_area, list_perimeter[j], mean_perimeter, list_label[j], sum_label]
+                          mean_equivalent_diameter_area, list_perimeter[j], mean_perimeter, list_label[j], sum_label,
+                          sci, density_microns]
             rows = new
             data = pd.DataFrame(rows, columns=columns)
 
         else:
-            new = [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]
+            new = [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]
             new[0][0] = name
 
             print("no data")
@@ -557,13 +564,42 @@ def paths_plot(mypath):
     return (df, names, arry)
 
 
+###################################################################################################
+def calculate_sci(bild):
+    intensity = np.asarray(bild)
+    lys = intensity.tolist()
+    flat = [val for sublist in lys for val in sublist]
+    for i in flat:
+        if i == 0:
+            i = 0.001
+
+    flat.sort()
+    # print(flat)
+    l = len(flat)
+
+    low5 = int(l * 10 / 100)
+
+    high5 = l - low5
+
+    lowarry = flat[:low5]
+    higharry = flat[high5:]
+
+    mean1 = np.mean(lowarry)
+    mean2 = np.mean(higharry)
+    ratio = mean2 / mean1
+    return ratio
+
+
 ##############################################################################################
 # estimation of parameter lambda of a poisson distribution- works
+
+
 def mybin(image, pixel):
     # pixelsize= (9.02/image.shape[0])**2 # 1 pixel has 0.0451 microns-> need squared
     # pixellength=9.02/image.shape[0]
     pixelsize = (pixel / image.shape[0]) ** 2  # enter the pixelsize in microns
     pixellength = pixel / image.shape[0]  # enter the pixelsize in microns
+    sci = calculate_sci(image)
 
     me = image.mean()
     ratio = 2 * me
@@ -701,11 +737,14 @@ def mybin(image, pixel):
     if len(list_size4) > 0:
         var_fluo = 2 * (statistics.pstdev(list_fluo))
         var_size = 2 * (statistics.pstdev(list_size4))
+        density_microns = sum_label / pixel
     else:
         var_fluo = 0
         var_size = 0
+        density_microns = 0
 
-    arry_im = np.array([0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
+    arry_im = np.array(
+        [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
     arry_im[0] = me
     arry_im[1] = np.var(image)
     arry_im[2] = blurred.mean()
@@ -725,6 +764,7 @@ def mybin(image, pixel):
     arry_im[16] = sum_label
     arry_im[17] = density
     arry_im[18] = mean_relative_fluo
+    arry_im[19] = density_microns
 
     return (
         props4, arry_im, list_size4, mean_area, var_size, density, list_fluo, list_relative_fluo, mean_fluo, var_fluo,
@@ -733,15 +773,14 @@ def mybin(image, pixel):
         list_axis_major_length, mean_axis_major_length, list_axis_minor_length, mean_axis_minor_length,
         list_eccentricity,
         mean_eccentricity, list_equivalent_diameter_area, mean_equivalent_diameter_area, list_perimeter, mean_perimeter,
-        list_label, sum_label, image, thresh3, closed3, cleared3, image_label_overlay4, label_image4)
+        list_label, sum_label, image, thresh3, closed3, cleared3, image_label_overlay4, label_image4, sci,
+        density_microns)
 
-
-#######################################################################
 
 eel.init('dist')
 eel.start('index.html', size=(600, 750), port=8080)
 
-# semua([REM_NACL_PATH, REM_MS_PATH], condi_list)  # get tsne, knn, boxplot between all conditions
+# semua([REM_NACL_PATH, REM_MS_PATH], ["MS", "NaCl"])  # get tsne, knn, boxplot between all conditions
 
 globals().clear()
 locals().clear()

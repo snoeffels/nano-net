@@ -4,10 +4,16 @@
       <v-container>
         <v-row>
           <v-col cols="12">
-            <h2>Welcome</h2>
+            <h2>Say hello to science!</h2>
+            <v-btn small color="primary" @click="print">
+                  print
+                </v-btn>
             <p class="text-sm-body-2">
-              Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore
-              et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum.
+              Nanodomain'em all night long, baby! If you had enough of doing lame normie
+              stuff, try using this state of the art compooter thingy. Solving problems you didnt know u had in seconds.
+              Also we provide you with the latest lorem ipsum.
+
+
             </p>
             <v-row>
               <v-col cols="6">
@@ -24,7 +30,7 @@
               </v-col>
 
               <v-col cols="6">
-                <h3>Different NDs</h3>
+                <h3>Same but different NDs</h3>
                 <p class="text-sm-body-2">
                   Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut
                   labore
@@ -57,6 +63,17 @@ export default {
     return {
       sameNDs: false,
       differentNDs: false,
+    }
+  },
+  methods: {
+    print() {
+      // eslint-disable-next-line no-undef
+      eel.print_object({
+        test: 'abc',
+        funk: 1,
+        funky: 1.2,
+        bool: true
+      });
     }
   },
   components: {
