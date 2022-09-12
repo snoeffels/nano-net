@@ -119,26 +119,75 @@
             <small>Summarize if needed</small>
           </v-stepper-step>
           <v-stepper-content step="4">
-            <h3>Done!</h3>
-            <p>
-              Thanks for using....
-              Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore
-              et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum.
-              Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
-            </p>
-            <v-btn
-                small
-                color="primary"
-                @click="console.log('rerun')"
+            <v-progress-linear
+                rounded
+                readonly
+                :value="progress"
+                height="15"
             >
-              Rerun
-            </v-btn>
-            <v-btn text small @click="e6 = 3" class="ml-3">
-              Back
-            </v-btn>
-            <v-btn text small @click="$emit('back')" class="ml-3">
-              Home
-            </v-btn>
+              <strong style="color: white; font-size: 10px">{{ progressCurrentStep }} / {{ progressSteps }}</strong>
+            </v-progress-linear>
+
+            <div style="display: flex;overflow-x: auto;" class="mt-5">
+              <div v-for="image in images" :key="image.title" style="margin: 0 0 0 5px">
+                <v-dialog
+                    v-model="image.show"
+                    fullscreen
+                    hide-overlay
+                    transition="dialog-bottom-transition"
+                >
+                  <template v-slot:activator="{ on }">
+                    <button v-on="on">
+                      <v-card style="border-radius: 3px;width: 100px">
+                        <v-img :src="srcFromImage(image.src)"/>
+                      </v-card>
+                    </button>
+
+                  </template>
+                  <v-card style="background-color: black">
+                    <v-toolbar
+                        dark
+                        color="primary"
+                    >
+                      <v-btn
+                          icon
+                          dark
+                          @click="image.show = false"
+                      >
+                        <v-icon>mdi-close</v-icon>
+                      </v-btn>
+                      <v-toolbar-title>
+                        {{ image.title }}
+                      </v-toolbar-title>
+                    </v-toolbar>
+
+                    <v-img :src="srcFromImage(image.src)" style="height: calc(100vh - 56px)"/>
+                  </v-card>
+                </v-dialog>
+              </div>
+            </div>
+
+            <v-row>
+              <v-col class="mt-5">
+                <v-btn
+                    small
+                    color="primary"
+                    @click="run()"
+                    :disabled="!done"
+                >
+                  Rerun
+                </v-btn>
+                <v-btn outlined small color="error" class="ml-3" @click="cancel()" :disabled="done">
+                  Cancel
+                </v-btn>
+                <v-btn text small @click="e6 = 3" class="ml-3">
+                  Back
+                </v-btn>
+                <v-btn text small @click="$emit('back')" class="ml-3">
+                  Home
+                </v-btn>
+              </v-col>
+            </v-row>
           </v-stepper-content>
         </v-stepper>
       </v-col>
@@ -151,9 +200,15 @@ export default {
   name: 'SameMDs',
   data() {
     return {
+      dialog: false,
       e6: 1,
       fileInputValue: null,
       fileOutputValue: null,
+      progressCurrentStep: 0,
+      progressSteps: 0,
+      progress: 0,
+      images: [],
+      done: false,
       globals: {
         pixel: 9.02,
         display: false
@@ -169,7 +224,7 @@ export default {
 
       var that = this;
       // eslint-disable-next-line no-undef
-      eel.select_ms_path()(function (path) {
+      eel.select_path_1()(function (path) {
         that.fileInputValue = new File(["folder"], path);
       })
     },
@@ -202,7 +257,18 @@ export default {
       // eslint-disable-next-line no-undef
       eel.set_display_results(this.globals.display);
     },
+    cancel() {
+      if (typeof eel === 'undefined' || this.progressCurrentStep === this.progressSteps) {
+        return;
+      }
+
+      // eslint-disable-next-line no-undef
+      eel.cancel_same_nds();
+    },
     run() {
+      this.progress = 0;
+      this.progressCurrentStep = 0;
+      this.images = [];
       if (this.e6 === 3) {
         this.e6 = 4;
       }
@@ -213,7 +279,30 @@ export default {
 
       // eslint-disable-next-line no-undef
       eel.run_same_nds();
+    },
+    srcFromImage(image) {
+      return 'data:image/png;base64,' + image
     }
   },
+  mounted() {
+    if (typeof eel === 'undefined') {
+      return;
+    }
+
+    function addImageUnbound(image, p, i) {
+      image.show = false;
+      this.progress = (100 / p) * i;
+      this.progressCurrentStep = i;
+      this.progressSteps = p;
+      this.done = p === i
+
+      return this.images.push(image);
+    }
+
+    var addImageSameNDs = addImageUnbound.bind(this);
+
+    // eslint-disable-next-line no-undef
+    eel.expose(addImageSameNDs, 'add_image_same_nd');
+  }
 }
 </script>

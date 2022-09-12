@@ -97,7 +97,7 @@
                   <div style="display:flex">
                     <v-text-field
                         v-model="condition3Name"
-                      @change="handleNameChange3"
+                        @change="handleNameChange3"
                         label="Name"
                         style="padding-left: 33px; padding-top: 20px; width: 80%"
                     />
@@ -129,7 +129,7 @@
                   <div style="display:flex">
                     <v-text-field
                         v-model="condition4Name"
-                      @change="handleNameChange4"
+                        @change="handleNameChange4"
                         label="Name"
                         style="padding-left: 33px; padding-top: 20px; width: 80%"
                     />
@@ -158,7 +158,7 @@
             <v-btn
                 small
                 color="primary"
-                @click="e6 = 2"
+                @click="handleNext"
                 :disabled="[fileInputValue, fileInput2Value, fileInput3Value, fileInput4Value].filter(e => e !== null).length < 2"
             >
               Next
@@ -177,18 +177,10 @@
             <small>Summarize if needed</small>
           </v-stepper-step>
           <v-stepper-content step="2">
-            <v-file-input
-                @click.prevent="selectInputFolder2"
-                @click:clear="fileInput2Value = null"
-                label="Input"
-                :value="fileInput2Value"
-            />
-
             <v-btn
                 small
                 color="primary"
                 @click="e6 = 3"
-                :disabled="!fileInput2Value"
             >
               Next
             </v-btn>
@@ -226,7 +218,7 @@
             <v-btn
                 small
                 color="primary"
-                @click="e6 = 4"
+                @click="handleNext2"
                 :disabled="false"
             >
               Next
@@ -493,10 +485,10 @@ export default {
       color4: '#da00d7',
       condition4Name: "Label4",
       fileOutputValue: null,
-      orderItems: ['MS', 'NaCl', 'Sorbitol'],
-      value: null,
+      orderItems: [],
+      images: [],
       globals: {
-        order: [''],
+        order: [],
         testSize: 0.2,
         nEstimators: 1000,
         minSamplesSplit: 2,
@@ -515,8 +507,49 @@ export default {
     }
   },
   methods: {
-    abc() {
-      console.log('abc');
+    handleNext() {
+      this.globals.order = [];
+      this.orderItems = [];
+
+      if (this.fileInputValue) {
+        this.orderItems.push(this.conditionName)
+        this.globals.order.push(this.conditionName)
+
+        // eslint-disable-next-line no-undef
+        eel.set_name_and_color(this.conditionName, this.color);
+      }
+
+      if (this.fileInput2Value) {
+        this.orderItems.push(this.condition2Name)
+        this.globals.order.push(this.condition2Name)
+
+        // eslint-disable-next-line no-undef
+        eel.set_name_and_color_2(this.condition2Name, this.color2);
+      }
+
+      if (this.fileInput3Value) {
+        this.orderItems.push(this.condition3Name)
+        this.globals.order.push(this.condition3Name)
+
+        // eslint-disable-next-line no-undef
+        eel.set_name_and_color_3(this.condition3Name, this.color3);
+      }
+
+      if (this.fileInput4Value) {
+        this.orderItems.push(this.condition4Name)
+        this.globals.order.push(this.condition4Name)
+
+        // eslint-disable-next-line no-undef
+        eel.set_name_and_color_4(this.condition4Name, this.color4);
+      }
+
+      this.e6 = 2;
+    },
+    handleNext2() {
+      // eslint-disable-next-line no-undef
+      eel.set_conditions(this.globals.order);
+
+      this.e6 = 4;
     },
     handleNameChange() {
       this.conditionName = this.conditionName.replace(/[^a-zA-Z0-9]+/gi, '');
@@ -546,7 +579,7 @@ export default {
 
       var that = this;
       // eslint-disable-next-line no-undef
-      eel.select_ms_path()(function (path) {
+      eel.select_path_1()(function (path) {
         that.fileInputValue = new File(["folder"], path);
       })
     },
@@ -558,7 +591,7 @@ export default {
 
       var that = this;
       // eslint-disable-next-line no-undef
-      eel.select_nacl_path()(function (path) {
+      eel.select_path_2()(function (path) {
         that.fileInput2Value = new File(["folder"], path);
       })
     },
@@ -570,7 +603,7 @@ export default {
 
       var that = this;
       // eslint-disable-next-line no-undef
-      eel.select_nacl_path()(function (path) {
+      eel.select_path_3()(function (path) {
         that.fileInput3Value = new File(["folder"], path);
       })
     },
@@ -582,7 +615,7 @@ export default {
 
       var that = this;
       // eslint-disable-next-line no-undef
-      eel.select_nacl_path()(function (path) {
+      eel.select_path_4()(function (path) {
         that.fileInput4Value = new File(["folder"], path);
       })
     },
@@ -619,5 +652,19 @@ export default {
       eel.run_same_nds();
     }
   },
+  mounted() {
+    if (typeof eel === 'undefined') {
+      return;
+    }
+
+    function addImageUnbound(image) {
+      return this.images.push(image);
+    }
+
+    var addImage = addImageUnbound.bind(this);
+
+    // eslint-disable-next-line no-undef
+    eel.expose(addImage);
+  }
 }
 </script>

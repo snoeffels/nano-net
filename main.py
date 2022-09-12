@@ -672,8 +672,8 @@ def mybin(image, pixel):
 # Build paths: Windows => "\"; Linux, Darwin => "/"
 PATH_SEPERATOR = '\\' if sys.platform == 'win32' else '/'
 
-REM_NACL_PATH = PATH_SEPERATOR.join([".", "rem_nacl"])
-REM_MS_PATH = PATH_SEPERATOR.join([".", "rem_ms"])
+PATH_2 = PATH_SEPERATOR.join([".", "rem_nacl"])
+PATH_1 = PATH_SEPERATOR.join([".", "rem_ms"])
 
 condi_list = ["MS", "NaCl"]
 
@@ -681,7 +681,7 @@ PIXEL = 9.02  # enter pixels of your image (can check this in fiji)
 
 # semua([REM_NACL_PATH, REM_MS_PATH], condi_list)  # get tsne, knn, boxplot between all conditions
 
-paths(REM_MS_PATH)  # get excel, pictures from 1 condition
+paths(PATH_1)  # get excel, pictures from 1 condition
 
 # l=list of paths containing the images to be quantified and compared together
 # condi_list=list of conditions corresponding to the paths in l

@@ -1,3 +1,5 @@
+import base64
+import io
 import json
 import os
 import statistics
@@ -7,6 +9,7 @@ from glob import glob
 from os import listdir
 from os.path import isfile, join
 from statistics import mean
+from threading import Thread
 
 import eel
 import imageio.v2 as iio
@@ -40,9 +43,24 @@ from sklearn.neighbors import KNeighborsClassifier
 #                       Globals                              #
 ##############################################################
 OUTPUT_PATH = ""
-REM_MS_PATH = ""
-REM_NACL_PATH = ""
-DISPLAY_RESULTS = False
+
+PATH_1 = ""
+NAME_1 = ""
+COLOR_1 = ""
+
+PATH_2 = ""
+NAME_2 = ""
+COLOR_2 = ""
+
+PATH_3 = ""
+NAME_3 = ""
+COLOR_3 = ""
+
+PATH_4 = ""
+NAME_4 = ""
+COLOR_4 = ""
+
+CANCEL_SAME_NDS = False
 CONDI_LIST = ["MS", "NaCl"]
 PIXEL = 9.02  # enter pixels of your image (can check this in fiji)
 
@@ -70,19 +88,80 @@ def set_pixel(p):
 
 
 @eel.expose
-def select_ms_path():
-    global REM_MS_PATH
-    REM_MS_PATH = select_folder_tk()
-    print("REM_MS_PATH was set to: " + REM_MS_PATH)
-    return REM_MS_PATH
+def set_name_and_color(name, color):
+    global NAME_1, COLOR_1
+    NAME_1 = name
+    COLOR_1 = color
+    print("NAME_1 was set to: " + str(NAME_1))
+    print("COLOR_1 was set to: " + str(COLOR_1))
 
 
 @eel.expose
-def select_nacl_path():
-    global REM_NACL_PATH
-    REM_NACL_PATH = select_folder_tk()
-    print("REM_NACL_PATH was set to: " + REM_NACL_PATH)
-    return REM_NACL_PATH
+def set_name_and_color_2(name, color):
+    global NAME_2, COLOR_2
+    NAME_2 = name
+    COLOR_2 = color
+    print("NAME_2 was set to: " + str(NAME_2))
+    print("COLOR_2 was set to: " + str(COLOR_2))
+
+
+@eel.expose
+def set_name_and_color_3(name, color):
+    global NAME_3, COLOR_3
+    NAME_3 = name
+    COLOR_3 = color
+    print("NAME_3 was set to: " + str(NAME_3))
+    print("COLOR_3 was set to: " + str(COLOR_3))
+
+
+@eel.expose
+def set_name_and_color_4(name, color):
+    global NAME_4, COLOR_4
+    NAME_4 = name
+    COLOR_4 = color
+    print("NAME_4 was set to: " + str(NAME_4))
+    print("COLOR_4 was set to: " + str(COLOR_4))
+
+
+@eel.expose
+def set_conditions(conditions):
+    global CONDI_LIST
+    CONDI_LIST = conditions
+    print("CONDI_LIST was set to: " + str(conditions))
+    for i, x in enumerate(conditions):
+        print(str(i) + " : " + str(x))
+
+
+@eel.expose
+def select_path_1():
+    global PATH_1
+    PATH_1 = select_folder_tk()
+    print("PATH_1 was set to: " + PATH_1)
+    return PATH_1
+
+
+@eel.expose
+def select_path_2():
+    global PATH_2
+    PATH_2 = select_folder_tk()
+    print("PATH_2 was set to: " + PATH_2)
+    return PATH_2
+
+
+@eel.expose
+def select_path_3():
+    global PATH_3
+    PATH_3 = select_folder_tk()
+    print("PATH_3 was set to: " + PATH_3)
+    return PATH_3
+
+
+@eel.expose
+def select_path_4():
+    global PATH_4
+    PATH_4 = select_folder_tk()
+    print("PATH_4 was set to: " + PATH_4)
+    return PATH_4
 
 
 @eel.expose
@@ -102,23 +181,15 @@ def select_folder_tk():
 
 
 @eel.expose
-def set_display_results(d):
-    global DISPLAY_RESULTS
-    DISPLAY_RESULTS = d
-    print("DISPLAY_RESULTS was set to: " + str(DISPLAY_RESULTS))
-    return DISPLAY_RESULTS
-
-
-@eel.expose
 def run_same_nds():
-    paths(REM_MS_PATH)
+    paths(PATH_1)
 
 
 @eel.expose
-def print_object(v):
-    print(json.dumps(v, indent=4))
-    for keys, values in v.items():
-        print(str(keys) + " : " + str(v[keys]))
+def cancel_same_nds():
+    global CANCEL_SAME_NDS
+    CANCEL_SAME_NDS = True
+    print("CANCEL_SAME_NDS was set to: " + str(CANCEL_SAME_NDS))
 
 
 ##############################################################
@@ -138,7 +209,15 @@ def paths(mypath):
 
     count = 0
     seg = 0
+
     for i in range(len(p)):
+        eel.sleep(0.001)
+        global CANCEL_SAME_NDS
+
+        if CANCEL_SAME_NDS:
+            print("BREAK!")
+            break
+
         count += 1
         seg += 1
         name = names[i]
@@ -147,7 +226,7 @@ def paths(mypath):
         props4, arry_im, list_size4, mean_area, var_size, density, list_fluo, list_relative_fluo, mean_fluo, var_fluo, list_intensity_max, mean_intensity_max, list_intensity_min, mean_intensity_min, list_area_filled, mean_area_filled, list_axis_major_length, mean_axis_major_length, list_axis_minor_length, mean_axis_minor_length, list_eccentricity, mean_eccentricity, list_equivalent_diameter_area, mean_equivalent_diameter_area, list_perimeter, mean_perimeter, list_label, sum_label, image, thresh3, closed3, cleared3, image_label_overlay4, label_image4, sci, density_microns = mybin(
             image, PIXEL)
 
-        pic(image, thresh3, closed3, cleared3, image_label_overlay4, label_image4, name, mypath, seg)
+        pic(i, len(p), image, thresh3, closed3, cleared3, image_label_overlay4, label_image4, name, mypath, seg)
         columns = ["name", "area", "mean_area", "var_area", "density", "intensity", "relative_intensity",
                    "mean_intensity", "var_intensity", "max_intensity", "mean_max_intensity", "min_intensity",
                    "mean_min_intensity", "area_filled", "mean_area_filled", "major_axis_length",
@@ -155,6 +234,7 @@ def paths(mypath):
                    "mean_eccentricity", "equivalent_diameter_area", "mean_equivalent_diameter_area", "perimeter",
                    "mean_perimeter", "nano_domain_id", "nano_domain_quantity", "sci", "density_microns"]
         new = list_size4
+
         if len(list_size4) > 0:
             for j in range(len(list_size4)):
                 new[j] = [name, list_size4[j], mean_area, var_size, density, list_fluo[j], list_relative_fluo[j],
@@ -162,7 +242,8 @@ def paths(mypath):
                           mean_intensity_min, list_area_filled[j], mean_area_filled, list_axis_major_length[j],
                           mean_axis_major_length, list_axis_minor_length[j], mean_axis_minor_length,
                           list_eccentricity[j], mean_eccentricity, list_equivalent_diameter_area[j],
-                          mean_equivalent_diameter_area, list_perimeter[j], mean_perimeter, list_label[j], sum_label, sci, density_microns]
+                          mean_equivalent_diameter_area, list_perimeter[j], mean_perimeter, list_label[j], sum_label,
+                          sci, density_microns]
 
             rows = new
             data = pd.DataFrame(rows, columns=columns)
@@ -199,12 +280,14 @@ def paths(mypath):
                 workbook.save(out_path)  # save workbook
                 workbook.close()  # close workbook
 
+    CANCEL_SAME_NDS = False
+
     return (data, p, names, props4, list_size4, list_fluo, mean_area, density, list_relative_fluo)
 
 
 ##################################################################################################################
 # for visual pictures- works
-def pic(image, thresh3, closed3, cleared3, image_label_overlay4, label_image4, name, mypath, seg):
+def pic(i, p, image, thresh3, closed3, cleared3, image_label_overlay4, label_image4, name, mypath, seg):
     fig, axes = plt.subplots(nrows=1, ncols=5, figsize=(10, 10), sharex=True, sharey=True)
     ax = axes.ravel()
 
@@ -237,15 +320,17 @@ def pic(image, thresh3, closed3, cleared3, image_label_overlay4, label_image4, n
     ax[4].set_title('rect_w', fontsize=20)
 
     fig.tight_layout()
-    plt.savefig(os.path.join(mypath, name) + str(seg) + ".png")
-    global DISPLAY_RESULTS
-    if DISPLAY_RESULTS:
-        plt.show()  # show after creation
+    pltPath = os.path.join(mypath, name) + str(seg) + ".png"
+    plt.savefig(pltPath, format='png')
+    plt.close(fig)
+
+    tmp = open(pltPath, "rb")
+    eel.add_image_same_nd({'src': base64.b64encode(tmp.read()).decode('utf-8'), 'title': str(name) + str(seg) + ".png"},
+                          p, i + 1)
+    tmp.close()
 
 
 ##################################################################### for many statistics:
-
-
 def semua(l, order):
     df_all = pd.DataFrame()
     df_list = [0] * len(l)
@@ -456,7 +541,7 @@ def forest(arry_all, condition2, order):
     tree.plot_tree(clf.estimators_[0],
                    feature_names=fn,
                    class_names=cn,
-                   filled=True);
+                   filled=True)
 
     plt.show()
     plt.close()
@@ -534,7 +619,7 @@ def paths_plot(mypath):
                    "mean_min_intensity", "area_filled", "mean_area_filled", "major_axis_length",
                    "mean_major_axis_length", "minor_axis_length", "mean_minor_axis_length", "eccentricity",
                    "mean_eccentricity", "equivalent_diameter_area", "mean_equivalent_diameter_area", "perimeter",
-                   "mean_perimeter", "label", "sum_label", "SCI", "density_microns"]
+                   "mean_perimeter", "nano_domain_id", "nano_domain_quantity", "SCI", "density_microns"]
         new = list_size4
         if len(list_size4) > 0:
             for j in range(len(list_size4)):
@@ -778,7 +863,7 @@ def mybin(image, pixel):
 
 
 eel.init('dist')
-eel.start('index.html', size=(600, 750), port=8080)
+eel.start('index.html', size=(900, 900), port=8080)
 
 # semua([REM_NACL_PATH, REM_MS_PATH], ["MS", "NaCl"])  # get tsne, knn, boxplot between all conditions
 

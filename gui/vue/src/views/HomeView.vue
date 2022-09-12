@@ -5,9 +5,6 @@
         <v-row>
           <v-col cols="12">
             <h2>Say hello to science!</h2>
-            <v-btn small color="primary" @click="print">
-                  print
-                </v-btn>
             <p class="text-sm-body-2">
               Nanodomain'em all night long, baby! If you had enough of doing lame normie
               stuff, try using this state of the art compooter thingy. Solving problems you didnt know u had in seconds.
@@ -63,17 +60,6 @@ export default {
     return {
       sameNDs: false,
       differentNDs: false,
-    }
-  },
-  methods: {
-    print() {
-      // eslint-disable-next-line no-undef
-      eel.print_object({
-        test: 'abc',
-        funk: 1,
-        funky: 1.2,
-        bool: true
-      });
     }
   },
   components: {
