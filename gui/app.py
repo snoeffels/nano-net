@@ -449,16 +449,16 @@ def semua(l, order, dry_run=False):
 
     plots_all(df_all, order)
 
-
+    # return
     plot_correlation(df_all)
 
-
+    # return
     tsn_all(arry_all, names_all2, condition2)
 
-
+    # return
     knn_all(arry_all, condition2, order)
 
-    return
+    # return
     forest(arry_all, condition2, order)
 
     return arry_all, names_all2, condition2
