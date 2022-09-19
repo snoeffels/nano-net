@@ -74,25 +74,6 @@
             <small>Summarize if needed</small>
           </v-stepper-step>
           <v-stepper-content step="3">
-            <v-checkbox
-                class="ml-2"
-                :input-value="globals.display"
-                @change="globals.display = !globals.display; setDisplayResults()"
-                label="Display segmentations while processing"
-            />
-
-            <!--            <v-tooltip bottom>-->
-            <!--              <template #activator="{ on }">-->
-            <!--                <v-icon color="red" class="mr-1" v-on="on">fab fa-youtube</v-icon>-->
-            <!--              </template>-->
-            <!--              <span><p>-->
-            <!--              image: explanation...<br>-->
-            <!--              thresh3: explanation...<br>-->
-            <!--              closed3: explanation...<br>-->
-            <!--              cleared3: explanation...<br>-->
-            <!--              rect_w: explanation...<br>-->
-            <!--            </p></span>-->
-            <!--            </v-tooltip>-->
 
             <v-file-input
                 @click.prevent="selectOutputFolder"
@@ -172,12 +153,12 @@
                 <v-btn
                     small
                     color="primary"
-                    @click="run()"
+                    @click="run"
                     :disabled="!done"
                 >
                   Rerun
                 </v-btn>
-                <v-btn outlined small color="error" class="ml-3" @click="cancel()" :disabled="done">
+                <v-btn outlined small color="error" class="ml-3" @click="cancel" :disabled="done">
                   Cancel
                 </v-btn>
                 <v-btn text small @click="e6 = 3" class="ml-3">
@@ -211,7 +192,6 @@ export default {
       done: false,
       globals: {
         pixel: 9.02,
-        display: false
       }
     }
   },
@@ -249,23 +229,18 @@ export default {
       // eslint-disable-next-line no-undef
       eel.set_pixel(this.globals.pixel);
     },
-    setDisplayResults() {
-      if (typeof eel === 'undefined') {
-        return;
-      }
-
-      // eslint-disable-next-line no-undef
-      eel.set_display_results(this.globals.display);
-    },
     cancel() {
       if (typeof eel === 'undefined' || this.progressCurrentStep === this.progressSteps) {
         return;
       }
 
+      this.done = true;
+
       // eslint-disable-next-line no-undef
       eel.cancel_same_nds();
     },
     run() {
+      this.done = false;
       this.progress = 0;
       this.progressCurrentStep = 0;
       this.images = [];
@@ -277,8 +252,12 @@ export default {
         return;
       }
 
+      const that = this;
+
       // eslint-disable-next-line no-undef
-      eel.run_same_nds();
+      eel.run_same_nds()(function () {
+        that.done = true;
+      });
     },
     srcFromImage(image) {
       return 'data:image/png;base64,' + image
@@ -294,7 +273,6 @@ export default {
       this.progress = (100 / p) * i;
       this.progressCurrentStep = i;
       this.progressSteps = p;
-      this.done = p === i
 
       return this.images.push(image);
     }

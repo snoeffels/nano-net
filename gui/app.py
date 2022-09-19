@@ -17,6 +17,7 @@ import matplotlib.patches as mpatches
 import matplotlib.pyplot as plt
 import numpy as np
 import openpyxl
+import pandas
 import pandas as pd
 import scipy.ndimage.morphology as ndi
 import seaborn as sns
@@ -59,6 +60,27 @@ COLOR_3 = ""
 PATH_4 = ""
 NAME_4 = ""
 COLOR_4 = ""
+
+PATHS = []
+FEATURES = []
+
+ACCURACY = 0
+ACCURACY_BALANCED = 0
+OPTIMAL_NEIGHBORS = 0
+
+testSize = 0.2
+nEstimators = 1000
+minSamplesSplit = 2
+minSamplesLeaf = 1
+maxFeatures = 'sqrt'
+maxDepth = 110
+testSizeKnn = 0.2
+nNeighbors = 3
+nComponents = 2
+perplexity = 20
+nIter = 500
+
+# ----------------------------------------------------------------
 
 CANCEL_SAME_NDS = False
 CONDI_LIST = ["MS", "NaCl"]
@@ -124,12 +146,53 @@ def set_name_and_color_4(name, color):
 
 
 @eel.expose
-def set_conditions(conditions):
-    global CONDI_LIST
+def set_parameters(parameters):
+    global testSize, nEstimators, minSamplesLeaf, minSamplesSplit, maxDepth, maxFeatures, testSizeKnn, nNeighbors, nComponents, perplexity, nIter
+    testSize = parameters['testSize']
+    nEstimators = parameters['nEstimators']
+    minSamplesLeaf = parameters['minSamplesLeaf']
+    minSamplesSplit = parameters['minSamplesSplit']
+    maxDepth = parameters['maxDepth']
+    maxFeatures = parameters['maxFeatures']
+    testSizeKnn = parameters['testSizeKnn']
+    nNeighbors = parameters['nNeighbors']
+    nComponents = parameters['nComponents']
+    perplexity = parameters['perplexity']
+    nIter = parameters['nIter']
+    print("parameters were set")
+
+
+@eel.expose
+def set_conditions_and_paths(conditions, paths):
+    global CONDI_LIST, PATHS
     CONDI_LIST = conditions
+    PATHS = paths
     print("CONDI_LIST was set to: " + str(conditions))
-    for i, x in enumerate(conditions):
-        print(str(i) + " : " + str(x))
+    print("PATHS was set to: " + str(paths))
+
+
+@eel.expose
+def set_optimal_neighbors(value):
+    global OPTIMAL_NEIGHBORS
+    OPTIMAL_NEIGHBORS = value
+    print("OPTIMAL_NEIGHBORS was set to: " + str(OPTIMAL_NEIGHBORS))
+
+
+@eel.expose
+def set_features(features):
+    global FEATURES
+    FEATURES = features
+    print("FEATURES was set to: (" + str(len(features)) + ") " + str(features))
+
+
+@eel.expose
+def get_accuracy():
+    global CONDI_LIST, PATHS
+    optimal_k, accuracy, accuracy_balanced = semua(PATHS, CONDI_LIST, dry_run=True)
+    return {
+        "accuracy": accuracy,
+        "neighbors": optimal_k,
+    }
 
 
 @eel.expose
@@ -198,6 +261,8 @@ def cancel_same_nds():
 
 # get excel and pictures:
 def paths(mypath):
+    global CANCEL_SAME_NDS
+    CANCEL_SAME_NDS = False
     p = []
     names = []
     onlyfiles = [f for f in listdir(mypath) if isfile(join(mypath, f))]
@@ -212,10 +277,8 @@ def paths(mypath):
 
     for i in range(len(p)):
         eel.sleep(0.001)
-        global CANCEL_SAME_NDS
 
         if CANCEL_SAME_NDS:
-            print("BREAK!")
             break
 
         count += 1
@@ -325,13 +388,13 @@ def pic(i, p, image, thresh3, closed3, cleared3, image_label_overlay4, label_ima
     plt.close(fig)
 
     tmp = open(pltPath, "rb")
-    eel.add_image_same_nd({'src': base64.b64encode(tmp.read()).decode('utf-8'), 'title': str(name) + str(seg) + ".png"},
-                          p, i + 1)
+    eel.add_image_same_nd(
+        {'src': base64.b64encode(tmp.read()).decode('utf-8'), 'title': str(name) + str(seg) + ".png"}, p, i + 1)
     tmp.close()
 
 
 ##################################################################### for many statistics:
-def semua(l, order):
+def semua(l, order, dry_run=False):
     df_all = pd.DataFrame()
     df_list = [0] * len(l)
     names_all = [0] * len(l)
@@ -339,12 +402,13 @@ def semua(l, order):
     laenge = [0] * len(l)
     for num, kata in enumerate(l):
         df_list[num], names_all[num], arry_l[num] = paths_plot(kata)
-        df_all = df_all.append(df_list[num], ignore_index=True)
+
+        # df_all = df_all.append(df_list[num], ignore_index=True)
+        df_all = pandas.concat((df_all, df_list[num]), ignore_index=True)
 
         laenge[num] = df_list[num].shape[0]
 
     for i in range(len(arry_l)):
-
         if i == 0:
             if len(arry_l) == 3:
                 arry_all = np.concatenate((arry_l[i], arry_l[i + 1], arry_l[i + 2]), axis=0)
@@ -379,11 +443,22 @@ def semua(l, order):
 
     df_all["condition"] = condi_df2
 
+    # calculate accuracy
+    if dry_run:
+        return knn_all(arry_all, condition2, order, True)
+
     plots_all(df_all, order)
+
+
     plot_correlation(df_all)
 
-    arry_all, names_all2, condition2 = tsn_all(arry_all, names_all2, condition2)
+
+    tsn_all(arry_all, names_all2, condition2)
+
+
     knn_all(arry_all, condition2, order)
+
+    return
     forest(arry_all, condition2, order)
 
     return arry_all, names_all2, condition2
@@ -396,9 +471,13 @@ def tsn_all(arry_all, names_all2, condition2):  # tnse
     scaler = preprocessing.StandardScaler().fit(arry_all)
     X_scaled = scaler.transform(arry_all)
 
-    tsne = TSNE(n_components=2, perplexity=20, n_iter=500).fit_transform(
-        X_scaled)  # , n_iter=250, learning_rate=50,  method="exact"
-    # print(tsne)
+    tsne = []
+    try:
+        tsne = TSNE(n_components=2, perplexity=5, n_iter=500).fit_transform(X_scaled)
+    except ValueError:
+        # TODO Fix this!
+        print("perplexity must be less than n_samples")
+
     x = tsne[:, 0]
     y = tsne[:, 1]
 
@@ -418,18 +497,11 @@ def tsn_all(arry_all, names_all2, condition2):  # tnse
 
 def plot_correlation(df_all):
     corr = df_all.corr()
-    fig, ax = plt.subplots(figsize=(10, 10))
-    ax.matshow(corr)
-    plt.xticks(range(len(corr.columns)), corr.columns, rotation='vertical')
-    plt.yticks(range(len(corr.columns)), corr.columns)
-
-    plt.show()
-    plt.close()
-
     f, ax = plt.subplots(figsize=(10, 8))
     sns.heatmap(corr, mask=np.zeros_like(corr, dtype=np.bool), cmap=plt.cm.RdBu,
                 square=True, ax=ax)  # cmap=sns.diverging_palette(220, 10, as_cmap=True)
 
+    # TODO save plots
     plt.show()
     plt.close()
 
@@ -439,7 +511,8 @@ def plot_correlation(df_all):
 ########################################################################
 
 
-def knn_all(arry_all, condition2, order):
+def knn_all(arry_all, condition2, order, dry_run=False):
+    global ACCURACY, ACCURACY_BALANCED, OPTIMAL_NEIGHBORS
     condition2 = np.array(condition2)
     MinMaxScaler = preprocessing.MinMaxScaler()
     arry_norm = MinMaxScaler.fit_transform(arry_all)
@@ -450,9 +523,10 @@ def knn_all(arry_all, condition2, order):
     predicted = model.predict(X_test)
     print(predicted)
     print(y_test)
-    print("accuracy: {}".format(accuracy_score(y_test, predicted)))
-
-    print("accuracy_balanced: {}".format(balanced_accuracy_score(y_test, predicted)))
+    accuracy = accuracy_score(y_test, predicted)
+    print("accuracy: {}".format(accuracy))
+    accuracy_balanced = balanced_accuracy_score(y_test, predicted)
+    print("accuracy_balanced: {}".format(accuracy_balanced))
     neighbors = list(range(1, 9, 2))
 
     # empty list that will hold cv scores
@@ -470,6 +544,12 @@ def knn_all(arry_all, condition2, order):
     optimal_k = neighbors[mse.index(min(mse))]
     print("The optimal number of neighbors is {}".format(optimal_k))
 
+    if dry_run:
+        ACCURACY = accuracy
+        ACCURACY_BALANCED = accuracy_balanced
+        OPTIMAL_NEIGHBORS = optimal_k
+        return optimal_k, accuracy, accuracy_balanced
+
     sns.set_style("white")
 
     fig_dims = (6, 6)
@@ -480,6 +560,7 @@ def knn_all(arry_all, condition2, order):
     plt.subplots(figsize=fig_dims)
     sns.scatterplot(X_test[:, 0], X_test[:, 6], hue=y_test, s=50, hue_order=order, palette="Paired")
 
+    # TODO Save plots
     plt.show()
     plt.close()
 
@@ -532,6 +613,7 @@ def forest(arry_all, condition2, order):
     plt.xlabel('Predicted label')
     plt.ylabel('True label')
     plt.title('Confusion Matrix for Random Forest Model')
+    # TODO save plots
     plt.show()
 
     ### tree that works: plot of the decision tree
@@ -543,6 +625,7 @@ def forest(arry_all, condition2, order):
                    class_names=cn,
                    filled=True)
 
+    # TODO save plots
     plt.show()
     plt.close()
 
@@ -550,36 +633,106 @@ def forest(arry_all, condition2, order):
 #######################################################################################
 
 def plots_all(df_all, order):  # boxplots
+    lookup = {
+        "area": {
+            "title": "ND area (microns)",
+            "ylabel": "microns"
+        },
 
-    plt.subplot(1, 4, 1)  # row 1, col 2 index 1
+        "mean_area": {
+            "title": "mean ND area per image",
+            "ylabel": "microns"
+        },
 
-    sns.boxplot(x="condition", y="mean_area", data=df_all, order=order, palette="Paired", showfliers=False)
+        "var_area": {
+            "title": "variance of ND area per image",
+            "ylabel": "microns"
+        },
 
-    plt.title("ND mean_area")
+        "density": {
+            "title": "ND density",
+            "ylabel": "percent"
+        },
+
+        "intensity": {
+            "title": "ND intensity",
+            "ylabel": "intensity"
+        },
+
+        "relative_intensity": {
+            "title": "relative ND intensity",
+            "ylabel": "rel. intensity"
+        },
+
+        "mean_intensity": {
+            "title": "mean ND intensity per image",
+            "ylabel": "mean intensity"
+        },
+
+        "var_intensity": {
+            "title": "variance of ND intensity per image",
+            "ylabel": "intensity variance"
+        },
+
+        "max_intensity": {
+            "title": "ND max. intensity",
+            "ylabel": "max. intensity"
+        },
+
+        "mean_eccentricity": {
+            "title": "mean ND eccentricity per image",
+            "ylabel": "eccentricity"
+        },
+
+        "equivalent_diameter_area": {
+            "title": "ND equivalent diameter area",
+            "ylabel": "microns"
+        },
+
+        "mean_equivalent_diameter_area": {
+            "title": "mean ND equivalent diameter area per image",
+            "ylabel": "microns"
+        },
+
+        "perimeter": {
+            "title": "perimeter of NDs",
+            "ylabel": "microns"
+        },
+
+        "mean_perimeter": {
+            "title": "mean perimeter of NDs per image",
+            "ylabel": "microns"
+        },
+
+        "ND_quantitiy": {
+            "title": "Nr. of NDs per image",
+            "ylabel": "ND quantitiy"
+        },
+
+        "SCI": {
+            "title": "image wide spatial clustering index",
+            "ylabel": "SCI"
+        },
+
+        "density_microns": {
+            "title": "ND density in microns",
+            "ylabel": "microns"
+        }
+    }
+
+    for index, feature in enumerate(lookup):
+        plt.subplot(index + 1, len(order), index + 1)
+
+    # sns.boxplot(x="condition", y=feature, data=df_all, order=order, palette="Paired", showfliers=False)
+    sns.boxplot(x="condition", y="density", data=df_all, order=order, palette="Paired", showfliers=False)
+
+    # plt.title(lookup['feature']['title'])
+    plt.title('title')
     plt.xlabel('condition')
-    plt.ylabel('mean area')
+    # plt.ylabel(lookup['feature']['ylabel'])
+    plt.ylabel('lable')
 
-    plt.subplot(1, 4, 2)  # index 2
-    sns.boxplot(x="condition", y="density", data=df_all, order=order, palette="Paired")
-    sns.swarmplot(x="condition", y="density", data=df_all, order=order, color="0.5", alpha=0.5, size=2)
-    plt.title("ND density")
-    plt.xlabel('condition')
-    plt.ylabel('density')
-
-    plt.subplot(1, 4, 3)  # index 3
-    sns.boxplot(x="condition", y="relative_intensity", data=df_all, order=order, palette="Paired")
-    sns.swarmplot(x="condition", y="relative_intensity", data=df_all, order=order, color="0.75", alpha=0.5, size=2)
-    plt.title("fluorescence")
-    plt.xlabel('condition')
-    plt.ylabel('fluorescence')
-
-    plt.subplot(1, 4, 4)  # index 4
-    sns.boxplot(x="condition", y="mean_intensity", data=df_all, order=order, palette="Paired")
-    sns.swarmplot(x="condition", y="mean_intensity", data=df_all, order=order, color="0.75", alpha=0.5, size=2)
-    plt.title("mean intensity")
-    plt.xlabel('condition')
-    plt.ylabel('mean intensity')
-
+    # TODO save the plots
     plt.subplots_adjust(bottom=0.1, right=4, top=1.4)
     plt.show()
     plt.cla()
@@ -602,7 +755,7 @@ def paths_plot(mypath):
             names.append(i)
             path = os.path.join(mypath, i)
             p.append(path)
-    arry = np.ones((len(names), 19))
+    arry = np.ones((len(names), 20))
     df = pd.DataFrame()
 
     for i in range(len(p)):
@@ -642,7 +795,8 @@ def paths_plot(mypath):
             rows = new
             data = pd.DataFrame(rows, columns=columns)
 
-        df = df.append(data, ignore_index=True)
+        # df = df.append(data, ignore_index=True)
+        df = pandas.concat((df, data), ignore_index=True)
 
         arry[i] = arry_im
 
@@ -659,7 +813,6 @@ def calculate_sci(bild):
             i = 0.001
 
     flat.sort()
-    # print(flat)
     l = len(flat)
 
     low5 = int(l * 10 / 100)
@@ -682,6 +835,7 @@ def calculate_sci(bild):
 def mybin(image, pixel):
     # pixelsize= (9.02/image.shape[0])**2 # 1 pixel has 0.0451 microns-> need squared
     # pixellength=9.02/image.shape[0]
+
     pixelsize = (pixel / image.shape[0]) ** 2  # enter the pixelsize in microns
     pixellength = pixel / image.shape[0]  # enter the pixelsize in microns
     sci = calculate_sci(image)
@@ -862,10 +1016,10 @@ def mybin(image, pixel):
         density_microns)
 
 
-eel.init('dist')
-eel.start('index.html', size=(900, 900), port=8080)
+semua(['/home/dennis/Workspace/other/nano-net/rem_nacl_2', '/home/dennis/Workspace/other/nano-net/rem_nacl'], ['Label2', 'Label4'], False)
 
-# semua([REM_NACL_PATH, REM_MS_PATH], ["MS", "NaCl"])  # get tsne, knn, boxplot between all conditions
+# eel.init('dist')
+# eel.start('index.html', size=(900, 900), port=8080)
 
-globals().clear()
-locals().clear()
+# globals().clear()
+# locals().clear()

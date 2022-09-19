@@ -173,31 +173,10 @@
               :complete="e6 > 2"
               step="2"
           >
-            Select input path NaCl
-            <small>Summarize if needed</small>
-          </v-stepper-step>
-          <v-stepper-content step="2">
-            <v-btn
-                small
-                color="primary"
-                @click="e6 = 3"
-            >
-              Next
-            </v-btn>
-            <v-btn text small @click="e6 = 1" class="ml-3">
-              Back
-            </v-btn>
-          </v-stepper-content>
-
-          <!-- STEP 3 -->
-          <v-stepper-step
-              :complete="e6 > 3"
-              step="3"
-          >
             Order of conditions
             <small>Summarize if needed</small>
           </v-stepper-step>
-          <v-stepper-content step="3">
+          <v-stepper-content step="2">
             <v-row
                 align="center"
             >
@@ -223,20 +202,20 @@
             >
               Next
             </v-btn>
-            <v-btn text small @click="e6 = 2" class="ml-3">
+            <v-btn text small @click="e6 = 1" class="ml-3">
               Back
             </v-btn>
           </v-stepper-content>
 
-          <!-- STEP 4 -->
+          <!-- STEP 3 -->
           <v-stepper-step
-              :complete="e6 > 4"
-              step="4"
+              :complete="e6 > 3"
+              step="3"
           >
             Parameter settings
             <small>Summarize if needed</small>
           </v-stepper-step>
-          <v-stepper-content step="4">
+          <v-stepper-content step="3">
             <v-row>
               <v-col cols="6">
                 <h4>
@@ -327,25 +306,25 @@
             <v-btn
                 small
                 color="primary"
-                @click="e6 = 5"
+                @click="handleNext3"
                 :disabled="false"
             >
               Next
             </v-btn>
-            <v-btn text small @click="e6 = 3" class="ml-3">
+            <v-btn text small @click="e6 = 2" class="ml-3">
               Back
             </v-btn>
           </v-stepper-content>
 
-          <!-- STEP 5 -->
+          <!-- STEP 4 -->
           <v-stepper-step
-              :complete="e6 > 5"
-              step="5"
+              :complete="e6 > 4"
+              step="4"
           >
             Estimation of K-NN optimal number
             <small>Summarize if needed</small>
           </v-stepper-step>
-          <v-stepper-content step="5">
+          <v-stepper-content step="4">
             <v-text-field
                 v-model="globals.acuracyKnn"
                 label="K-NN Acuracy"
@@ -360,13 +339,161 @@
                 type="number"
                 step="1"
                 style="width: 150px"
-                readonly
             />
 
             <v-btn
                 small
                 color="primary"
-                @click="e6 = 6"
+                @click="handleNext4"
+                :disabled="false"
+            >
+              Next
+            </v-btn>
+            <v-btn text small @click="e6 = 3" class="ml-3">
+              Back
+            </v-btn>
+          </v-stepper-content>
+
+          <!-- STEP 5 -->
+          <v-stepper-step
+              :complete="e6 > 5"
+              step="5"
+          >
+            Select features
+            <small>Summarize if needed</small>
+          </v-stepper-step>
+          <v-stepper-content step="5">
+            <v-row>
+              <v-col>
+                <v-checkbox
+                    class="ml-2"
+                    v-model="checkboxes.area"
+                    @change="setFeatures('area')"
+                    checked
+                    label="ND area (microns)"
+                />
+
+                <v-checkbox
+                    class="ml-2"
+                    v-model="checkboxes.meanArea"
+                    @change="setFeatures('mean_area')"
+                    label="Mean ND area per image"
+                />
+
+                <v-checkbox
+                    class="ml-2"
+                    v-model="checkboxes.varArea"
+                    @change="setFeatures('var_area')"
+                    label="Variance of ND area per image"
+                />
+
+                <v-checkbox
+                    class="ml-2"
+                    v-model="checkboxes.density"
+                    @change="setFeatures('density')"
+                    label="ND density"
+                />
+
+                <v-checkbox
+                    class="ml-2"
+                    v-model="checkboxes.intensity"
+                    @change="setFeatures('intensity')"
+                    label="ND intensity"
+                />
+
+                <v-checkbox
+                    class="ml-2"
+                    v-model="checkboxes.relativeIntensity"
+                    @change="setFeatures('relative_intensity')"
+                    label="Relative ND intensity"
+                />
+              </v-col>
+              <v-col>
+                <v-checkbox
+                    class="ml-2"
+                    v-model="checkboxes.meanIntensity"
+                    @change="setFeatures('mean_intensity')"
+                    label="Mean ND intensity per image"
+                />
+
+                <v-checkbox
+                    class="ml-2"
+                    v-model="checkboxes.varIntensity"
+                    @change="setFeatures('var_intensity')"
+                    label="Variance of ND intensity per image"
+                />
+
+                <v-checkbox
+                    class="ml-2"
+                    v-model="checkboxes.maxIntensity"
+                    @change="setFeatures('max_intensity')"
+                    label="ND max. intensity"
+                />
+
+                <v-checkbox
+                    class="ml-2"
+                    v-model="checkboxes.meanEccentricity"
+                    @change="setFeatures('mean_eccentricity')"
+                    label="Mean ND eccentricity per image"
+                />
+
+                <v-checkbox
+                    class="ml-2"
+                    v-model="checkboxes.equivalentDiameterArea"
+                    @change="setFeatures('equivalent_diameter_area')"
+                    label="ND equivalent diameter area"
+                />
+
+                <v-checkbox
+                    class="ml-2"
+                    v-model="checkboxes.meanEquivalentDiameterArea"
+                    @change="setFeatures('mean_equivalent_diameter_area')"
+                    label="Mean ND equivalent diameter area per image"
+                />
+              </v-col>
+              <v-col>
+                <v-checkbox
+                    class="ml-2"
+                    v-model="checkboxes.perimeter"
+                    @change="setFeatures('perimeter')"
+                    checked
+                    label="Perimeter of NDs"
+                />
+
+                <v-checkbox
+                    class="ml-2"
+                    v-model="checkboxes.meanPerimeter"
+                    @change="setFeatures('meanPerimeter')"
+                    label="Mean perimeter of NDs per image"
+                />
+
+                <v-checkbox
+                    class="ml-2"
+                    v-model="checkboxes.ndQuantity"
+                    @change="setFeatures('ND_quantitiy')"
+                    label="Number of NDs per image"
+                />
+
+                <v-checkbox
+                    class="ml-2"
+                    v-model="checkboxes.SCI"
+                    @change="setFeatures('SCI')"
+                    label="SCI"
+                />
+
+                <v-checkbox
+                    class="ml-2"
+                    v-model="checkboxes.densityMicrons"
+                    @change="setFeatures('density_microns')"
+                    label="ND density in microns"
+                />
+              </v-col>
+            </v-row>
+
+            <v-btn
+                small
+                color="primary"
+                @click="handleNext5"
                 :disabled="false"
             >
               Next
@@ -385,35 +512,6 @@
             <small>Summarize if needed</small>
           </v-stepper-step>
           <v-stepper-content step="6">
-            <v-btn
-                small
-                color="primary"
-                @click="e6 = 7"
-                :disabled="false"
-            >
-              Next
-            </v-btn>
-            <v-btn text small @click="e6 = 5" class="ml-3">
-              Back
-            </v-btn>
-          </v-stepper-content>
-
-          <!-- STEP 7 -->
-          <v-stepper-step
-              :complete="e6 > 7"
-              step="7"
-          >
-            Observe segmentation
-            <small>Summarize if needed</small>
-          </v-stepper-step>
-          <v-stepper-content step="7">
-            <v-checkbox
-                class="ml-2"
-                :input-value="globals.display"
-                @change="globals.display = !globals.display; setDisplayResults()"
-                label="Display segmentations while processing"
-            />
-
             <v-file-input
                 @click.prevent="selectOutputFolder"
                 @click:clear="fileOutputValue = null"
@@ -423,42 +521,252 @@
             <v-btn
                 small
                 color="primary"
-                @click="e6 = 8"
+                @click="e6 = 7"
                 :disabled="!fileOutputValue"
             >
               Next
             </v-btn>
-            <v-btn text small @click="e6 = 6" class="ml-3">
+            <v-btn text small @click="e6 = 5" class="ml-3">
               Back
             </v-btn>
           </v-stepper-content>
 
-          <!-- STEP 8 -->
-          <v-stepper-step step="8">
+          <!-- STEP 7 -->
+          <v-stepper-step step="7">
             Save results
             <small>Summarize if needed</small>
           </v-stepper-step>
-          <v-stepper-content step="8">
-            <h3>Done!</h3>
-            <p>
-              Thanks for using....
-              Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore
-              et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum.
-              Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
-            </p>
-            <v-btn
-                small
-                color="primary"
-                @click="console.log('rerun')"
+          <v-stepper-content step="7">
+
+            <v-progress-linear
+                readonly
+                :value="progress"
+                height="15"
             >
-              Rerun
-            </v-btn>
-            <v-btn text small @click="e6 = 7" class="ml-3">
-              Back
-            </v-btn>
-            <v-btn text small @click="$emit('back')" class="ml-3">
-              Home
-            </v-btn>
+              <strong style="color: white; font-size: 10px">{{ 12 }} / {{ 14 }}</strong>
+            </v-progress-linear>
+
+            <v-tabs
+                v-model="tabs"
+                background-color="primary"
+                dark
+            >
+              <v-tab>
+                Boxplots
+              </v-tab>
+
+              <v-tab>
+                TSNE
+              </v-tab>
+
+              <v-tab>
+                Knn
+              </v-tab>
+
+              <v-tab>
+                RF
+              </v-tab>
+            </v-tabs>
+
+            <v-tabs-items v-model="tabs">
+              <v-tab-item>
+                <v-card flat>
+                  <v-card-text>Boxplots</v-card-text>
+                  <div style="display: flex;overflow-x: auto;" class="mt-5">
+                    <div v-for="image in images.boxplots" :key="image.title" style="margin: 0 0 0 5px">
+                      <v-dialog
+                          v-model="image.show"
+                          fullscreen
+                          hide-overlay
+                          transition="dialog-bottom-transition"
+                      >
+                        <template v-slot:activator="{ on }">
+                          <button v-on="on">
+                            <v-card style="border-radius: 3px;width: 100px">
+                              <v-img :src="srcFromImage(image.src)"/>
+                            </v-card>
+                          </button>
+
+                        </template>
+                        <v-card style="background-color: black">
+                          <v-toolbar
+                              dark
+                              color="primary"
+                          >
+                            <v-btn
+                                icon
+                                dark
+                                @click="image.show = false"
+                            >
+                              <v-icon>mdi-close</v-icon>
+                            </v-btn>
+                            <v-toolbar-title>
+                              {{ image.title }}
+                            </v-toolbar-title>
+                          </v-toolbar>
+
+                          <v-img :src="srcFromImage(image.src)" style="height: calc(100vh - 56px)"/>
+                        </v-card>
+                      </v-dialog>
+                    </div>
+                  </div>
+                </v-card>
+              </v-tab-item>
+
+              <v-tab-item>
+                <v-card flat>
+                  <v-card-text>TSNE</v-card-text>
+                  <div style="display: flex;overflow-x: auto;" class="mt-5">
+                    <div v-for="image in images.tsne" :key="image.title" style="margin: 0 0 0 5px">
+                      <v-dialog
+                          v-model="image.show"
+                          fullscreen
+                          hide-overlay
+                          transition="dialog-bottom-transition"
+                      >
+                        <template v-slot:activator="{ on }">
+                          <button v-on="on">
+                            <v-card style="border-radius: 3px;width: 100px">
+                              <v-img :src="srcFromImage(image.src)"/>
+                            </v-card>
+                          </button>
+
+                        </template>
+                        <v-card style="background-color: black">
+                          <v-toolbar
+                              dark
+                              color="primary"
+                          >
+                            <v-btn
+                                icon
+                                dark
+                                @click="image.show = false"
+                            >
+                              <v-icon>mdi-close</v-icon>
+                            </v-btn>
+                            <v-toolbar-title>
+                              {{ image.title }}
+                            </v-toolbar-title>
+                          </v-toolbar>
+
+                          <v-img :src="srcFromImage(image.src)" style="height: calc(100vh - 56px)"/>
+                        </v-card>
+                      </v-dialog>
+                    </div>
+                  </div>
+                </v-card>
+              </v-tab-item>
+
+              <v-tab-item>
+                <v-card flat>
+                  <v-card-text>Knn</v-card-text>
+                  <div style="display: flex;overflow-x: auto;" class="mt-5">
+                    <div v-for="image in images.knn" :key="image.title" style="margin: 0 0 0 5px">
+                      <v-dialog
+                          v-model="image.show"
+                          fullscreen
+                          hide-overlay
+                          transition="dialog-bottom-transition"
+                      >
+                        <template v-slot:activator="{ on }">
+                          <button v-on="on">
+                            <v-card style="border-radius: 3px;width: 100px">
+                              <v-img :src="srcFromImage(image.src)"/>
+                            </v-card>
+                          </button>
+
+                        </template>
+                        <v-card style="background-color: black">
+                          <v-toolbar
+                              dark
+                              color="primary"
+                          >
+                            <v-btn
+                                icon
+                                dark
+                                @click="image.show = false"
+                            >
+                              <v-icon>mdi-close</v-icon>
+                            </v-btn>
+                            <v-toolbar-title>
+                              {{ image.title }}
+                            </v-toolbar-title>
+                          </v-toolbar>
+
+                          <v-img :src="srcFromImage(image.src)" style="height: calc(100vh - 56px)"/>
+                        </v-card>
+                      </v-dialog>
+                    </div>
+                  </div>
+                </v-card>
+              </v-tab-item>
+
+              <v-tab-item>
+                <v-card flat>
+                  <v-card-text>RF</v-card-text>
+                  <div style="display: flex;overflow-x: auto;" class="mt-5">
+                    <div v-for="image in images.rf" :key="image.title" style="margin: 0 0 0 5px">
+                      <v-dialog
+                          v-model="image.show"
+                          fullscreen
+                          hide-overlay
+                          transition="dialog-bottom-transition"
+                      >
+                        <template v-slot:activator="{ on }">
+                          <button v-on="on">
+                            <v-card style="border-radius: 3px;width: 100px">
+                              <v-img :src="srcFromImage(image.src)"/>
+                            </v-card>
+                          </button>
+
+                        </template>
+                        <v-card style="background-color: black">
+                          <v-toolbar
+                              dark
+                              color="primary"
+                          >
+                            <v-btn
+                                icon
+                                dark
+                                @click="image.show = false"
+                            >
+                              <v-icon>mdi-close</v-icon>
+                            </v-btn>
+                            <v-toolbar-title>
+                              {{ image.title }}
+                            </v-toolbar-title>
+                          </v-toolbar>
+
+                          <v-img :src="srcFromImage(image.src)" style="height: calc(100vh - 56px)"/>
+                        </v-card>
+                      </v-dialog>
+                    </div>
+                  </div>
+                </v-card>
+              </v-tab-item>
+            </v-tabs-items>
+
+            <v-row>
+              <v-col class="mt-5">
+                <v-btn
+                    small
+                    color="primary"
+                    @click="run"
+                    :disabled="!done"
+                >
+                  Rerun
+                </v-btn>
+                <v-btn outlined small color="error" class="ml-3" @click="cancel" :disabled="done">
+                  Cancel
+                </v-btn>
+                <v-btn text small @click="e6 = 6" class="ml-3">
+                  Back
+                </v-btn>
+                <v-btn text small @click="$emit('back')" class="ml-3">
+                  Home
+                </v-btn>
+              </v-col>
+            </v-row>
           </v-stepper-content>
         </v-stepper>
       </v-col>
@@ -473,22 +781,58 @@ export default {
     return {
       e6: 1,
       fileInputValue: null,
+      path: "",
       color: '#fd8f00',
       conditionName: "Label1",
       fileInput2Value: null,
+      path2: "",
       color2: '#0063b9',
       condition2Name: "Label2",
       fileInput3Value: null,
+      path3: "",
       color3: '#4b9d00',
       condition3Name: "Label3",
       fileInput4Value: null,
+      path4: "",
       color4: '#da00d7',
       condition4Name: "Label4",
       fileOutputValue: null,
+      features: ['area', 'mean_area', 'var_area', 'density', 'intensity', 'relative_intensity', 'mean_intensity', 'var_intensity', 'max_intensity', 'mean_eccentricity', 'equivalent_diameter_area', 'mean_equivalent_diameter_area', 'perimeter', 'mean_perimeter', 'ND_quantity', 'SCI', 'density_microns'],
       orderItems: [],
-      images: [],
+      pathItems: [],
+      images: {
+        boxplots: [],
+        tsne: [],
+        knn: [],
+        rf: [],
+      },
+      progress: 85,
+      progressCurrentStep: 12,
+      progressSteps: 14,
+      tabs: null,
+      done: false,
+      checkboxes: {
+        area: true,
+        meanArea: true,
+        varArea: true,
+        density: true,
+        intensity: true,
+        relativeIntensity: true,
+        meanIntensity: true,
+        varIntensity: true,
+        maxIntensity: true,
+        meanEccentricity: true,
+        equivalentDiameterArea: true,
+        meanEquivalentDiameterArea: true,
+        perimeter: true,
+        meanPerimeter: true,
+        ndQuantity: true,
+        SCI: true,
+        densityMicrons: true,
+      },
       globals: {
         order: [],
+        paths: [],
         testSize: 0.2,
         nEstimators: 1000,
         minSamplesSplit: 2,
@@ -500,56 +844,112 @@ export default {
         nComponents: 2,
         perplexity: 20,
         nIter: 500,
-        acuracyKnn: 0.75,
-        optimalNumberOfNeighbors: 5,
-        display: false
+        acuracyKnn: 0.0,
+        optimalNumberOfNeighbors: 0,
       }
     }
   },
   methods: {
+    srcFromImage(image) {
+      return 'data:image/png;base64,' + image
+    },
     handleNext() {
       this.globals.order = [];
       this.orderItems = [];
 
       if (this.fileInputValue) {
         this.orderItems.push(this.conditionName)
+        this.pathItems.push(this.path)
         this.globals.order.push(this.conditionName)
 
-        // eslint-disable-next-line no-undef
-        eel.set_name_and_color(this.conditionName, this.color);
+        if (typeof eel !== 'undefined') {
+          // eslint-disable-next-line no-undef
+          eel.set_name_and_color(this.conditionName, this.color);
+        }
       }
 
       if (this.fileInput2Value) {
         this.orderItems.push(this.condition2Name)
+        this.pathItems.push(this.path2)
         this.globals.order.push(this.condition2Name)
 
-        // eslint-disable-next-line no-undef
-        eel.set_name_and_color_2(this.condition2Name, this.color2);
+        if (typeof eel !== 'undefined') {
+          // eslint-disable-next-line no-undef
+          eel.set_name_and_color_2(this.condition2Name, this.color2);
+        }
       }
 
       if (this.fileInput3Value) {
         this.orderItems.push(this.condition3Name)
+        this.pathItems.push(this.path3);
         this.globals.order.push(this.condition3Name)
 
-        // eslint-disable-next-line no-undef
-        eel.set_name_and_color_3(this.condition3Name, this.color3);
+        if (typeof eel !== 'undefined') {
+          // eslint-disable-next-line no-undef
+          eel.set_name_and_color_3(this.condition3Name, this.color3);
+        }
       }
 
       if (this.fileInput4Value) {
         this.orderItems.push(this.condition4Name)
+        this.pathItems.push(this.path4)
         this.globals.order.push(this.condition4Name)
 
-        // eslint-disable-next-line no-undef
-        eel.set_name_and_color_4(this.condition4Name, this.color4);
+        if (typeof eel !== 'undefined') {
+          // eslint-disable-next-line no-undef
+          eel.set_name_and_color_4(this.condition4Name, this.color4);
+        }
       }
 
       this.e6 = 2;
     },
     handleNext2() {
-      // eslint-disable-next-line no-undef
-      eel.set_conditions(this.globals.order);
+      this.globals.paths = [];
+
+      for (var i = 0; i < this.globals.order.length; i++) {
+        this.globals.paths.push(this.pathItems[this.orderItems.indexOf(this.globals.order[i])]);
+      }
+
+      if (typeof eel !== 'undefined') {
+        // eslint-disable-next-line no-undef
+        eel.set_conditions_and_paths(this.globals.order, this.globals.paths);
+
+      }
+
+      this.e6 = 3;
+    },
+    handleNext3() {
+      if (typeof eel !== 'undefined') {
+        // eslint-disable-next-line no-undef
+        eel.set_parameters(this.globals);
+
+        var that = this;
+        // eslint-disable-next-line no-undef
+        eel.get_accuracy()(function (values) {
+          console.log("accuracy: " + values['accuracy']);
+          console.log("neighbors: " + values['neighbors']);
+          that.globals.acuracyKnn = values['accuracy'];
+          that.globals.optimalNumberOfNeighbors = values['neighbors'];
+        })
+      }
 
       this.e6 = 4;
+    },
+    handleNext4() {
+      if (typeof eel !== 'undefined') {
+        // eslint-disable-next-line no-undef
+        eel.set_optimal_neighbors(this.globals.optimalNumberOfNeighbors);
+      }
+
+      this.e6 = 5;
+    },
+    handleNext5() {
+      if (typeof eel !== 'undefined') {
+        // eslint-disable-next-line no-undef
+        eel.set_features(this.features);
+      }
+
+      this.e6 = 6;
     },
     handleNameChange() {
       this.conditionName = this.conditionName.replace(/[^a-zA-Z0-9]+/gi, '');
@@ -580,6 +980,7 @@ export default {
       var that = this;
       // eslint-disable-next-line no-undef
       eel.select_path_1()(function (path) {
+        that.path = path
         that.fileInputValue = new File(["folder"], path);
       })
     },
@@ -592,6 +993,7 @@ export default {
       var that = this;
       // eslint-disable-next-line no-undef
       eel.select_path_2()(function (path) {
+        that.path2 = path
         that.fileInput2Value = new File(["folder"], path);
       })
     },
@@ -604,6 +1006,7 @@ export default {
       var that = this;
       // eslint-disable-next-line no-undef
       eel.select_path_3()(function (path) {
+        that.path3 = path
         that.fileInput3Value = new File(["folder"], path);
       })
     },
@@ -616,6 +1019,7 @@ export default {
       var that = this;
       // eslint-disable-next-line no-undef
       eel.select_path_4()(function (path) {
+        that.path4 = path
         that.fileInput4Value = new File(["folder"], path);
       })
     },
@@ -631,13 +1035,16 @@ export default {
         that.fileOutputValue = new File(["folder"], path);
       })
     },
-    setDisplayResults() {
+    setFeatures(value) {
+      if (this.features.find(e => e === value)) {
+        this.features = this.features.filter(e => e !== value);
+      } else {
+        this.features.push(value);
+      }
+
       if (typeof eel === 'undefined') {
         return;
       }
-
-      // eslint-disable-next-line no-undef
-      eel.set_display_results(this.globals.display);
     },
     run() {
       if (this.e6 === 3) {
@@ -649,8 +1056,18 @@ export default {
       }
 
       // eslint-disable-next-line no-undef
-      eel.run_same_nds();
-    }
+      eel.run_different_nds();
+    },
+    cancel() {
+      if (typeof eel === 'undefined' || this.progressCurrentStep === this.progressSteps) {
+        return;
+      }
+
+      this.done = true;
+
+      // eslint-disable-next-line no-undef
+      eel.cancel_different_nds();
+    },
   },
   mounted() {
     if (typeof eel === 'undefined') {

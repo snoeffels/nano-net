@@ -2,7 +2,7 @@
 import sys
 import skimage
 from glob import glob
-import imageio.v2 as iio
+import imageio as iio
 from skimage.segmentation import clear_border
 from skimage.measure import label, regionprops
 from skimage.morphology import closing
@@ -26,7 +26,7 @@ import seaborn as sns
 
 from sklearn.manifold import TSNE
 from sklearn import preprocessing
-from scipy.ndimage import gaussian_filter
+from scipy.ndimage.filters import gaussian_filter
 import statistics
 
 from sklearn.model_selection import train_test_split
@@ -39,12 +39,8 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import accuracy_score, confusion_matrix, classification_report
 from sklearn import tree
 
-print(skimage.__version__)
 
-# %reset
-
-
-    ########################################### get excel and pictures:
+########################################### get excel and pictures:
 def paths(mypath):
     p = []
     names = []
@@ -67,7 +63,7 @@ def paths(mypath):
         mean = image[i].mean()
 
         props4, arry_im, list_size4, mean_area, var_size, density, list_fluo, list_relative_fluo, mean_fluo, var_fluo, list_intensity_max, mean_intensity_max, list_intensity_min, mean_intensity_min, list_area_filled, mean_area_filled, list_axis_major_length, mean_axis_major_length, list_axis_minor_length, mean_axis_minor_length, list_eccentricity, mean_eccentricity, list_equivalent_diameter_area, mean_equivalent_diameter_area, list_perimeter, mean_perimeter, list_label, sum_label, image, thresh3, closed3, cleared3, image_label_overlay4, label_image4 = mybin(
-            image, PIXEL)
+            image, pixel)
 
         pic(image, thresh3, closed3, cleared3, image_label_overlay4, label_image4, name, mypath, seg)
         columns = ["name", "area", "mean_area", "var_area", "density", "intensity", "relative_intensity",
@@ -114,6 +110,7 @@ def paths(mypath):
                 writer.save()
                 writer.close()
             else:
+
                 workbook = openpyxl.load_workbook(out_path)  # load workbook if already exists
                 sheet = workbook['Sheet1']  # declare the active sheet
                 for row in dataframe_to_rows(data, header=False, index=False):
@@ -162,7 +159,7 @@ def pic(image, thresh3, closed3, cleared3, image_label_overlay4, label_image4, n
     pic_path = os.path.join(mypath, name)
     pic_path2 = pic_path + str(seg) + ".png"
     plt.savefig(pic_path2)
-    # plt.show() # show after creation
+    plt.show()
 
 
 ##################################################################### for many statistics:
@@ -233,7 +230,7 @@ def tsn_all(arry_all, names_all2, condition2):  # tnse
     scaler = preprocessing.StandardScaler().fit(arry_all)
     X_scaled = scaler.transform(arry_all)
 
-    tsne = TSNE(n_components=2, perplexity=20, n_iter=500).fit_transform(
+    tsne = TSNE(n_components=2, perplexity=5, n_iter=500).fit_transform(
         X_scaled)  # , n_iter=250, learning_rate=50,  method="exact"
     # print(tsne)
     x = tsne[:, 0]
@@ -452,7 +449,7 @@ def paths_plot(mypath):
         mean = image[i].mean()
 
         props4, arry_im, list_size4, mean_area, var_size, density, list_fluo, list_relative_fluo, mean_fluo, var_fluo, list_intensity_max, mean_intensity_max, list_intensity_min, mean_intensity_min, list_area_filled, mean_area_filled, list_axis_major_length, mean_axis_major_length, list_axis_minor_length, mean_axis_minor_length, list_eccentricity, mean_eccentricity, list_equivalent_diameter_area, mean_equivalent_diameter_area, list_perimeter, mean_perimeter, list_label, sum_label, image, thresh3, closed3, cleared3, image_label_overlay4, label_image4 = mybin(
-            image, PIXEL)
+            image, pixel)
         # print(arry_im)
         columns = ["name", "area", "mean_area", "var_area", "density", "intensity", "relative_intensity",
                    "mean_intesity", "var_intesity", "max_intesity", "mean_max_intesity", "min_intesity",
@@ -672,18 +669,18 @@ def mybin(image, pixel):
 # Build paths: Windows => "\"; Linux, Darwin => "/"
 PATH_SEPERATOR = '\\' if sys.platform == 'win32' else '/'
 
-PATH_2 = PATH_SEPERATOR.join([".", "rem_nacl"])
-PATH_1 = PATH_SEPERATOR.join([".", "rem_ms"])
+REM_NACL_PATH = PATH_SEPERATOR.join([".", "rem_nacl"])
+REM_MS_PATH = PATH_SEPERATOR.join([".", "rem_ms"])
 
 condi_list = ["MS", "NaCl"]
 
-PIXEL = 9.02  # enter pixels of your image (can check this in fiji)
+pixel = 9.02  # enter pixels of your image (can check this in fiji)
 
-# semua([REM_NACL_PATH, REM_MS_PATH], condi_list)  # get tsne, knn, boxplot between all conditions
+semua(['/home/dennis/Workspace/other/nano-net/rem_ms', '/home/dennis/Workspace/other/nano-net/rem_nacl'], ['Label2', 'Label4'])  # get tsne, knn, boxplot between all conditions
 
-paths(PATH_1)  # get excel, pictures from 1 condition
+# paths(REM_MS_PATH)  # get excel, pictures from 1 condition
 
-# l=list of paths containing the images to be quantified and compared together
+# l=list of paths containing the images to be quantified and compared togehter
 # condi_list=list of conditions corresponding to the paths in l
 # order= list of conditions in the order you want them to appear in the plot
 
