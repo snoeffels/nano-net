@@ -393,7 +393,7 @@ def pic(i, p, image, thresh3, closed3, cleared3, image_label_overlay4, label_ima
 
     fig.tight_layout()
 
-    pltPath = os.path.join(mypath, name) + str(seg) + ".png"
+    pltPath = os.path.join(OUTPUT_PATH, name) + str(seg) + ".png"
     plt.savefig(pltPath, format='png')
     plt.close(fig)
 
@@ -927,6 +927,8 @@ def mybin(image, pixel):
     # pixelsize= (9.02/image.shape[0])**2 # 1 pixel has 0.0451 microns-> need squared
     # pixellength=9.02/image.shape[0]
 
+
+    pixel = float(pixel)
     pixelsize = (pixel / image.shape[0]) ** 2  # enter the pixelsize in microns
     pixellength = pixel / image.shape[0]  # enter the pixelsize in microns
     sci = calculate_sci(image)
