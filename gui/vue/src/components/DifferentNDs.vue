@@ -470,14 +470,14 @@
                 <v-checkbox
                     class="ml-2"
                     v-model="checkboxes.ndQuantity"
-                    @change="setFeatures('ND_quantitiy')"
+                    @change="setFeatures('nano_domain_quantity')"
                     label="Number of NDs per image"
                 />
 
                 <v-checkbox
                     class="ml-2"
                     v-model="checkboxes.SCI"
-                    @change="setFeatures('SCI')"
+                    @change="setFeatures('sci')"
                     label="SCI"
                 />
 
@@ -521,7 +521,7 @@
             <v-btn
                 small
                 color="primary"
-                @click="e6 = 7"
+                @click="e6 = 7;run()"
                 :disabled="!fileOutputValue"
             >
               Next
@@ -543,7 +543,7 @@
                 :value="progress"
                 height="15"
             >
-              <strong style="color: white; font-size: 10px">{{ 12 }} / {{ 14 }}</strong>
+              <strong style="color: white; font-size: 10px">{{ progressCurrentStep }} / {{ progressSteps }}</strong>
             </v-progress-linear>
 
             <v-tabs
@@ -566,14 +566,47 @@
               <v-tab>
                 RF
               </v-tab>
+
+              <v-dialog
+                  v-model="showReport"
+                  fullscreen
+                  hide-overlay
+                  transition="dialog-bottom-transition"
+              >
+                <template v-slot:activator="{ on }">
+                  <div class="v-tab ml-auto" v-on="on">
+                    Report
+                  </div>
+                </template>
+
+                <v-card style="background-color: black">
+                  <v-toolbar
+                      dark
+                      color="primary"
+                  >
+                    <v-btn
+                        icon
+                        dark
+                        @click="showReport = false"
+                    >
+                      <v-icon>mdi-close</v-icon>
+                    </v-btn>
+                    <v-toolbar-title>
+                      Report
+                    </v-toolbar-title>
+                  </v-toolbar>
+
+                  <p style="color: white; overflow: auto" class="pa-2" v-html="report" />
+                </v-card>
+              </v-dialog>
+
             </v-tabs>
 
             <v-tabs-items v-model="tabs">
               <v-tab-item>
                 <v-card flat>
-                  <v-card-text>Boxplots</v-card-text>
                   <div style="display: flex;overflow-x: auto;" class="mt-5">
-                    <div v-for="image in images.boxplots" :key="image.title" style="margin: 0 0 0 5px">
+                    <div v-for="image in images.boxplot" :key="image.title" style="margin: 0 0 0 5px">
                       <v-dialog
                           v-model="image.show"
                           fullscreen
@@ -605,7 +638,7 @@
                             </v-toolbar-title>
                           </v-toolbar>
 
-                          <v-img :src="srcFromImage(image.src)" style="height: calc(100vh - 56px)"/>
+                          <v-img :src="srcFromImage(image.src)" style="max-height: calc(100vh - 56px);max-width: 100vw"/>
                         </v-card>
                       </v-dialog>
                     </div>
@@ -615,7 +648,6 @@
 
               <v-tab-item>
                 <v-card flat>
-                  <v-card-text>TSNE</v-card-text>
                   <div style="display: flex;overflow-x: auto;" class="mt-5">
                     <div v-for="image in images.tsne" :key="image.title" style="margin: 0 0 0 5px">
                       <v-dialog
@@ -649,7 +681,7 @@
                             </v-toolbar-title>
                           </v-toolbar>
 
-                          <v-img :src="srcFromImage(image.src)" style="height: calc(100vh - 56px)"/>
+                          <v-img :src="srcFromImage(image.src)" style="max-height: calc(100vh - 56px);max-width: 100vw"/>
                         </v-card>
                       </v-dialog>
                     </div>
@@ -659,7 +691,6 @@
 
               <v-tab-item>
                 <v-card flat>
-                  <v-card-text>Knn</v-card-text>
                   <div style="display: flex;overflow-x: auto;" class="mt-5">
                     <div v-for="image in images.knn" :key="image.title" style="margin: 0 0 0 5px">
                       <v-dialog
@@ -693,7 +724,7 @@
                             </v-toolbar-title>
                           </v-toolbar>
 
-                          <v-img :src="srcFromImage(image.src)" style="height: calc(100vh - 56px)"/>
+                          <v-img :src="srcFromImage(image.src)" style="max-height: calc(100vh - 56px);max-width: 100vw"/>
                         </v-card>
                       </v-dialog>
                     </div>
@@ -703,7 +734,6 @@
 
               <v-tab-item>
                 <v-card flat>
-                  <v-card-text>RF</v-card-text>
                   <div style="display: flex;overflow-x: auto;" class="mt-5">
                     <div v-for="image in images.rf" :key="image.title" style="margin: 0 0 0 5px">
                       <v-dialog
@@ -737,7 +767,7 @@
                             </v-toolbar-title>
                           </v-toolbar>
 
-                          <v-img :src="srcFromImage(image.src)" style="height: calc(100vh - 56px)"/>
+                          <v-img :src="srcFromImage(image.src)" style="max-height: calc(100vh - 56px);max-width: 100vw"/>
                         </v-card>
                       </v-dialog>
                     </div>
@@ -797,18 +827,18 @@ export default {
       color4: '#da00d7',
       condition4Name: "Label4",
       fileOutputValue: null,
-      features: ['area', 'mean_area', 'var_area', 'density', 'intensity', 'relative_intensity', 'mean_intensity', 'var_intensity', 'max_intensity', 'mean_eccentricity', 'equivalent_diameter_area', 'mean_equivalent_diameter_area', 'perimeter', 'mean_perimeter', 'ND_quantity', 'SCI', 'density_microns'],
+      features: ['area', 'mean_area', 'var_area', 'density', 'intensity', 'relative_intensity', 'mean_intensity', 'var_intensity', 'max_intensity', 'mean_eccentricity', 'equivalent_diameter_area', 'mean_equivalent_diameter_area', 'perimeter', 'mean_perimeter', 'nano_domain_quantity', 'sci', 'density_microns'],
       orderItems: [],
       pathItems: [],
       images: {
-        boxplots: [],
+        boxplot: [],
         tsne: [],
         knn: [],
         rf: [],
       },
-      progress: 85,
-      progressCurrentStep: 12,
-      progressSteps: 14,
+      progress: 0,
+      progressCurrentStep: 0,
+      progressSteps: 0,
       tabs: null,
       done: false,
       checkboxes: {
@@ -830,6 +860,8 @@ export default {
         SCI: true,
         densityMicrons: true,
       },
+      showReport: false,
+      report: "",
       globals: {
         order: [],
         paths: [],
@@ -1055,6 +1087,8 @@ export default {
         return;
       }
 
+      this.report = "";
+
       // eslint-disable-next-line no-undef
       eel.run_different_nds();
     },
@@ -1074,14 +1108,26 @@ export default {
       return;
     }
 
-    function addImageUnbound(image) {
-      return this.images.push(image);
-    }
+    function addImageUnbound(image, p, i, index) {
+      image.show = false;
+      this.progress = (100 / p) * i;
+      this.progressCurrentStep = i;
+      this.progressSteps = p;
 
-    var addImage = addImageUnbound.bind(this);
+      return this.images[index].push(image);
+    }
+    let addImage = addImageUnbound.bind(this);
 
     // eslint-disable-next-line no-undef
-    eel.expose(addImage);
+    eel.expose(addImage, 'add_image_different_nd');
+
+    function printToReportUnbound(text) {
+      this.report += text.replace(/\n/g, "<br />") + '<br />------------------------------------------------<br />';
+    }
+    let printToReport = printToReportUnbound.bind(this);
+
+    // eslint-disable-next-line no-undef
+    eel.expose(printToReport, 'print_to_report');
   }
 }
 </script>

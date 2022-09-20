@@ -83,6 +83,7 @@ nIter = 500
 # ----------------------------------------------------------------
 
 CANCEL_SAME_NDS = False
+CANCEL_DIFFERENT_NDS = False
 CONDI_LIST = ["MS", "NaCl"]
 PIXEL = 9.02  # enter pixels of your image (can check this in fiji)
 
@@ -253,6 +254,19 @@ def cancel_same_nds():
     global CANCEL_SAME_NDS
     CANCEL_SAME_NDS = True
     print("CANCEL_SAME_NDS was set to: " + str(CANCEL_SAME_NDS))
+
+
+@eel.expose
+def run_different_nds():
+    semua(['/home/dennis/Workspace/other/nano-net/rem_ms', '/home/dennis/Workspace/other/nano-net/rem_nacl'],
+          ['Label2', 'Label4'], False)
+
+
+@eel.expose
+def cancel_different_nds():
+    global CANCEL_DIFFERENT_NDS
+    CANCEL_DIFFERENT_NDS = True
+    print("CANCEL_DIFFERENT_NDS was set to: " + str(CANCEL_DIFFERENT_NDS))
 
 
 ##############################################################
@@ -449,23 +463,18 @@ def semua(l, order, dry_run=False):
 
     plots_all(df_all, order)
 
-    # return
     plot_correlation(df_all)
 
-    # return
     tsn_all(arry_all, names_all2, condition2)
 
-    # return
     knn_all(arry_all, condition2, order)
 
-    # return
     forest(arry_all, condition2, order)
 
     return arry_all, names_all2, condition2
 
 
 #######################################################################################
-
 def tsn_all(arry_all, names_all2, condition2):  # tnse
 
     scaler = preprocessing.StandardScaler().fit(arry_all)
@@ -495,22 +504,30 @@ def tsn_all(arry_all, names_all2, condition2):  # tnse
     return arry_all, names_all2, condition2
 
 
+########################################################################
 def plot_correlation(df_all):
     corr = df_all.corr()
     f, ax = plt.subplots(figsize=(10, 8))
     sns.heatmap(corr, mask=np.zeros_like(corr, dtype=np.bool), cmap=plt.cm.RdBu,
                 square=True, ax=ax)  # cmap=sns.diverging_palette(220, 10, as_cmap=True)
 
-    # TODO save plots
-    plt.show()
+    pltPath = os.path.join(OUTPUT_PATH, "correlation") + ".png"
+    plt.savefig(pltPath, format='png')
+    plt.cla()
+    plt.clf()
     plt.close()
+
+    tmp = open(pltPath, "rb")
+    eel.add_image_different_nd(
+        {'src': base64.b64encode(tmp.read()).decode('utf-8'), 'title': "correlation.png"},
+        1, 1,
+        "boxplot")
+    tmp.close()
 
     return df_all
 
 
 ########################################################################
-
-
 def knn_all(arry_all, condition2, order, dry_run=False):
     global ACCURACY, ACCURACY_BALANCED, OPTIMAL_NEIGHBORS
     condition2 = np.array(condition2)
@@ -554,19 +571,27 @@ def knn_all(arry_all, condition2, order, dry_run=False):
 
     fig_dims = (6, 6)
     plt.subplots(figsize=fig_dims)
-    sns.scatterplot(X_test[:, 0], X_test[:, 6], hue=predicted, hue_order=order, s=50, palette="Paired")
+    sns.scatterplot(X_test[:, 0], X_test[:, 6], hue_order=order, s=50, palette="Paired")
 
     fig_dims = (6, 6)
     plt.subplots(figsize=fig_dims)
-    sns.scatterplot(X_test[:, 0], X_test[:, 6], hue=y_test, s=50, hue_order=order, palette="Paired")
+    sns.scatterplot(X_test[:, 0], X_test[:, 6], s=50, hue_order=order, palette="Paired")
 
-    # TODO Save plots
-    plt.show()
+    pltPath = os.path.join(OUTPUT_PATH, "knn") + ".png"
+    plt.savefig(pltPath, format='png')
+    plt.cla()
+    plt.clf()
     plt.close()
+
+    tmp = open(pltPath, "rb")
+    eel.add_image_different_nd(
+        {'src': base64.b64encode(tmp.read()).decode('utf-8'), 'title': "knn.png"}, 1, 1, "knn")
+    tmp.close()
 
     return arry_all, condition2
 
 
+########################################################################
 def forest(arry_all, condition2, order):
     arr_col = ["me", "var", "mean_blur", "var_blur", "mean_fluo", "var_fluo", "mean_size", "var_size", "mean_int_max",
                "mean_int_min", "area_filled", "major_axis", "minor_axis", "eccentricity", "equivalent_diameter",
@@ -586,13 +611,16 @@ def forest(arry_all, condition2, order):
 
     y_pred = clf.predict(X_test)
 
-    print("Accuracy of Forest_1:", accuracy_score(y_test, y_pred))
+    eel.print_to_report("Accuracy of Forest_1: " + str(accuracy_score(y_test, y_pred)))
+    # print("Accuracy of Forest_1: ", str(accuracy_score(y_test, y_pred)))
 
     feature_imp = pd.Series(clf.feature_importances_, index=arr_col).sort_values(ascending=False)
-    print(feature_imp)
+    eel.print_to_report(str(feature_imp))
+    # print(feature_imp)
 
     # View the classification report for test data and predictions
-    print(classification_report(y_test, y_pred))
+    eel.print_to_report(str(classification_report(y_test, y_pred)))
+    # print(classification_report(y_test, y_pred))
 
     # Get and reshape confusion matrix data
     matrix = confusion_matrix(y_test, y_pred)
@@ -613,8 +641,16 @@ def forest(arry_all, condition2, order):
     plt.xlabel('Predicted label')
     plt.ylabel('True label')
     plt.title('Confusion Matrix for Random Forest Model')
-    # TODO save plots
-    plt.show()
+
+    pltPath = os.path.join(OUTPUT_PATH, "forest-confusion-matrix") + ".png"
+    plt.savefig(pltPath, format='png')
+
+    tmp = open(pltPath, "rb")
+    eel.add_image_different_nd(
+        {'src': base64.b64encode(tmp.read()).decode('utf-8'), 'title': "forest-confusion-matrix.png"},
+        2, 1,
+        "rf")
+    tmp.close()
 
     ### tree that works: plot of the decision tree
     fn = arr_col
@@ -625,14 +661,24 @@ def forest(arry_all, condition2, order):
                    class_names=cn,
                    filled=True)
 
-    # TODO save plots
-    plt.show()
+    pltPath = os.path.join(OUTPUT_PATH, "forest-decision-tree") + ".png"
+    plt.savefig(pltPath, format='png')
+
+    tmp = open(pltPath, "rb")
+    eel.add_image_different_nd(
+        {'src': base64.b64encode(tmp.read()).decode('utf-8'), 'title': "forest-decision-tree.png"},
+        2, 2,
+        "rf")
+    tmp.close()
+
+    plt.cla()
+    plt.clf()
     plt.close()
 
 
-#######################################################################################
-
+########################################################################
 def plots_all(df_all, order):  # boxplots
+    global OUTPUT_PATH, FEATURES
     lookup = {
         "area": {
             "title": "ND area (microns)",
@@ -704,12 +750,12 @@ def plots_all(df_all, order):  # boxplots
             "ylabel": "microns"
         },
 
-        "ND_quantitiy": {
+        "nano_domain_quantity": {
             "title": "Nr. of NDs per image",
             "ylabel": "ND quantitiy"
         },
 
-        "SCI": {
+        "sci": {
             "title": "image wide spatial clustering index",
             "ylabel": "SCI"
         },
@@ -720,31 +766,37 @@ def plots_all(df_all, order):  # boxplots
         }
     }
 
-    for index, feature in enumerate(lookup):
-        plt.subplot(index + 1, len(order), index + 1)
+    print(df_all)
 
-    # sns.boxplot(x="condition", y=feature, data=df_all, order=order, palette="Paired", showfliers=False)
-    sns.boxplot(x="condition", y="density", data=df_all, order=order, palette="Paired", showfliers=False)
+    for i, feature in enumerate(FEATURES):
+        plt.subplot(1, 1, 1)
 
-    # plt.title(lookup['feature']['title'])
-    plt.title('title')
-    plt.xlabel('condition')
-    # plt.ylabel(lookup['feature']['ylabel'])
-    plt.ylabel('lable')
+        # sns.boxplot(x="condition", y="density", data=df_all, order=order, palette="Paired", showfliers=False)
+        sns.boxplot(x="condition", y=feature, data=df_all, palette="Paired", showfliers=False)
 
-    # TODO save the plots
-    plt.subplots_adjust(bottom=0.1, right=4, top=1.4)
-    plt.show()
-    plt.cla()
-    plt.clf()
-    plt.close()
+        plt.title(lookup[feature]['title'])
+        plt.xlabel('condition')
+        plt.ylabel(lookup[feature]['ylabel'])
+
+        # plt.subplots_adjust(bottom=0.1, right=4, top=1.4)
+
+        pltPath = os.path.join(OUTPUT_PATH, "boxplot-" + str(feature)) + ".png"
+        plt.savefig(pltPath, format='png')
+        plt.cla()
+        plt.clf()
+        plt.close()
+
+        tmp = open(pltPath, "rb")
+        eel.add_image_different_nd(
+            {'src': base64.b64encode(tmp.read()).decode('utf-8'), 'title': "boxplot-" + str(feature) + ".png"},
+            len(FEATURES), (i + 1),
+            "boxplot")
+        tmp.close()
 
     return df_all
 
 
-##############################################################################
-
-
+########################################################################
 def paths_plot(mypath):
     p = []
     names = []
@@ -772,7 +824,7 @@ def paths_plot(mypath):
                    "mean_min_intensity", "area_filled", "mean_area_filled", "major_axis_length",
                    "mean_major_axis_length", "minor_axis_length", "mean_minor_axis_length", "eccentricity",
                    "mean_eccentricity", "equivalent_diameter_area", "mean_equivalent_diameter_area", "perimeter",
-                   "mean_perimeter", "nano_domain_id", "nano_domain_quantity", "SCI", "density_microns"]
+                   "mean_perimeter", "nano_domain_id", "nano_domain_quantity", "sci", "density_microns"]
         new = list_size4
         if len(list_size4) > 0:
             for j in range(len(list_size4)):
@@ -1016,10 +1068,5 @@ def mybin(image, pixel):
         density_microns)
 
 
-semua(['/home/dennis/Workspace/other/nano-net/rem_nacl_2', '/home/dennis/Workspace/other/nano-net/rem_nacl'], ['Label2', 'Label4'], False)
-
-# eel.init('dist')
-# eel.start('index.html', size=(900, 900), port=8080)
-
-# globals().clear()
-# locals().clear()
+eel.init('dist')
+eel.start('index.html', size=(900, 900), port=8080)
