@@ -161,10 +161,10 @@
                 <v-btn outlined small color="error" class="ml-3" @click="cancel" :disabled="done">
                   Cancel
                 </v-btn>
-                <v-btn text small @click="e6 = 3" class="ml-3">
+                <v-btn text small @click="e6 = 3" class="ml-3" :disabled="!done">
                   Back
                 </v-btn>
-                <v-btn text small @click="$emit('back')" class="ml-3">
+                <v-btn text small @click="$emit('back')" class="ml-3" :disabled="!done">
                   Home
                 </v-btn>
               </v-col>

@@ -1,6 +1,4 @@
 import base64
-import io
-import json
 import os
 import statistics
 import tkinter
@@ -9,7 +7,6 @@ from glob import glob
 from os import listdir
 from os.path import isfile, join
 from statistics import mean
-from threading import Thread
 
 import eel
 import imageio.v2 as iio
@@ -72,7 +69,6 @@ testSize = 0.2
 nEstimators = 1000
 minSamplesSplit = 2
 minSamplesLeaf = 1
-maxFeatures = 'sqrt'
 maxDepth = 110
 testSizeKnn = 0.2
 nNeighbors = 3
@@ -84,7 +80,7 @@ nIter = 500
 
 CANCEL_SAME_NDS = False
 CANCEL_DIFFERENT_NDS = False
-CONDI_LIST = ["MS", "NaCl"]
+CONDI_LIST = []
 PIXEL = 9.02  # enter pixels of your image (can check this in fiji)
 
 
@@ -148,13 +144,12 @@ def set_name_and_color_4(name, color):
 
 @eel.expose
 def set_parameters(parameters):
-    global testSize, nEstimators, minSamplesLeaf, minSamplesSplit, maxDepth, maxFeatures, testSizeKnn, nNeighbors, nComponents, perplexity, nIter
+    global testSize, nEstimators, minSamplesLeaf, minSamplesSplit, maxDepth, testSizeKnn, nNeighbors, nComponents, perplexity, nIter
     testSize = parameters['testSize']
     nEstimators = parameters['nEstimators']
     minSamplesLeaf = parameters['minSamplesLeaf']
     minSamplesSplit = parameters['minSamplesSplit']
     maxDepth = parameters['maxDepth']
-    maxFeatures = parameters['maxFeatures']
     testSizeKnn = parameters['testSizeKnn']
     nNeighbors = parameters['nNeighbors']
     nComponents = parameters['nComponents']
@@ -258,8 +253,8 @@ def cancel_same_nds():
 
 @eel.expose
 def run_different_nds():
-    semua(['/home/dennis/Workspace/other/nano-net/rem_ms', '/home/dennis/Workspace/other/nano-net/rem_nacl'],
-          ['Label2', 'Label4'], False)
+    global PATHS, CONDI_LIST
+    semua(PATHS, CONDI_LIST, False)
 
 
 @eel.expose
@@ -397,6 +392,7 @@ def pic(i, p, image, thresh3, closed3, cleared3, image_label_overlay4, label_ima
     ax[4].set_title('rect_w', fontsize=20)
 
     fig.tight_layout()
+
     pltPath = os.path.join(mypath, name) + str(seg) + ".png"
     plt.savefig(pltPath, format='png')
     plt.close(fig)
@@ -481,8 +477,15 @@ def tsn_all(arry_all, names_all2, condition2):  # tnse
     X_scaled = scaler.transform(arry_all)
 
     tsne = []
+
+    global nComponents, perplexity, nIter
+    print("nComponents -> " + str(nComponents))
+    print("perplexity -> " + str(perplexity))
+    print("nIter -> " + str(nIter))
+
     try:
-        tsne = TSNE(n_components=2, perplexity=5, n_iter=500).fit_transform(X_scaled)
+        tsne = TSNE(n_components=int(nComponents), perplexity=int(perplexity), n_iter=int(nIter)).fit_transform(
+            X_scaled)
     except ValueError:
         # TODO Fix this!
         print("perplexity must be less than n_samples")
@@ -494,12 +497,34 @@ def tsn_all(arry_all, names_all2, condition2):  # tnse
     df.groupby('label')
 
     sns.scatterplot(x="x", y="y", hue="label", data=df, palette="Paired")
+
+    global OUTPUT_PATH
+    pltPath = os.path.join(OUTPUT_PATH, "tsne") + ".png"
+
+    plt.savefig(pltPath, format='png')
+    plt.close()
+
+    tmp = open(pltPath, "rb")
+    eel.add_image_different_nd(
+        {'src': base64.b64encode(tmp.read()).decode('utf-8'), 'title': "tsne.png"}, 2, 1, "tsne")
+    tmp.close()
+
     for i in range(df.shape[0]):
         plt.text(x=df.x[i] + 0.3, y=df.y[i] + 0.3, s=df.img_name[i])
 
     fig_dims = (10, 10)
     plt.subplots(figsize=fig_dims)
     sns.scatterplot(x="x", y="y", hue="label", data=df, palette="Paired")
+
+    pltPath = os.path.join(OUTPUT_PATH, "tsne-2") + ".png"
+
+    plt.savefig(pltPath, format='png')
+    plt.close()
+
+    tmp = open(pltPath, "rb")
+    eel.add_image_different_nd(
+        {'src': base64.b64encode(tmp.read()).decode('utf-8'), 'title': "tsne-2.png"}, 2, 2, "tsne")
+    tmp.close()
 
     return arry_all, names_all2, condition2
 
@@ -529,13 +554,19 @@ def plot_correlation(df_all):
 
 ########################################################################
 def knn_all(arry_all, condition2, order, dry_run=False):
-    global ACCURACY, ACCURACY_BALANCED, OPTIMAL_NEIGHBORS
+    global ACCURACY, ACCURACY_BALANCED, OPTIMAL_NEIGHBORS, nNeighbors, testSizeKnn
     condition2 = np.array(condition2)
     MinMaxScaler = preprocessing.MinMaxScaler()
     arry_norm = MinMaxScaler.fit_transform(arry_all)
 
-    X_train, X_test, y_train, y_test = train_test_split(arry_norm, condition2, test_size=0.2, random_state=12345)
-    model = KNeighborsClassifier(n_neighbors=3)
+    X_train, X_test, y_train, y_test = train_test_split(arry_norm, condition2, test_size=float(testSizeKnn),
+                                                        random_state=12345)
+
+    if dry_run:
+        model = KNeighborsClassifier(n_neighbors=nNeighbors)
+    else:
+        model = KNeighborsClassifier(n_neighbors=OPTIMAL_NEIGHBORS)
+
     model.fit(X_train, y_train)
     predicted = model.predict(X_test)
     print(predicted)
@@ -551,7 +582,11 @@ def knn_all(arry_all, condition2, order, dry_run=False):
 
     # perform 10-fold cross validation
     for k in neighbors:
-        knn = KNeighborsClassifier(n_neighbors=k)
+        if dry_run:
+            knn = KNeighborsClassifier(n_neighbors=nNeighbors)
+        else:
+            knn = KNeighborsClassifier(n_neighbors=OPTIMAL_NEIGHBORS)
+
         scores = cross_val_score(knn, X_train, y_train, cv=8, scoring='accuracy')
         cv_scores.append(scores.mean())
     # changing to misclassification error
@@ -593,18 +628,22 @@ def knn_all(arry_all, condition2, order, dry_run=False):
 
 ########################################################################
 def forest(arry_all, condition2, order):
+    global testSize, nEstimators, minSamplesSplit, minSamplesLeaf, maxDepth
+
     arr_col = ["me", "var", "mean_blur", "var_blur", "mean_fluo", "var_fluo", "mean_size", "var_size", "mean_int_max",
                "mean_int_min", "area_filled", "major_axis", "minor_axis", "eccentricity", "equivalent_diameter",
                "perimeter", "nano_domain_quantity", "density", "relative_fluo", "density_microns"]
 
     condition2 = np.array(condition2)
 
-    X_train, X_test, y_train, y_test = train_test_split(arry_all, condition2, test_size=0.2, random_state=12345,
-                                                        stratify=condition2)
+    X_train, X_test, y_train, y_test = train_test_split(arry_all, condition2, test_size=float(testSize),
+                                                        random_state=12345, stratify=condition2)
 
+    global nEstimators, minSamplesSplit, minSamplesLeaf, maxDepth
     # Create a Gaussian Classifier
-    clf = RandomForestClassifier(n_estimators=1000, random_state=12345, min_samples_split=2, min_samples_leaf=1,
-                                 max_features="sqrt", max_depth=110, bootstrap=True)
+    clf = RandomForestClassifier(n_estimators=nEstimators, random_state=12345, min_samples_split=minSamplesSplit,
+                                 min_samples_leaf=minSamplesLeaf, max_features="sqrt", max_depth=maxDepth,
+                                 bootstrap=True)
 
     # Train the model using the training sets y_pred=clf.predict(X_test)
     clf.fit(X_train, y_train)

@@ -244,7 +244,7 @@ def tsn_all(arry_all, names_all2, condition2):  # tnse
         plt.text(x=df.x[i] + 0.3, y=df.y[i] + 0.3, s=df.img_name[i])
 
     fig_dims = (10, 10)
-    fig, ax = plt.subplots(figsize=fig_dims)
+    plt.subplots(figsize=fig_dims)
     sns.scatterplot(x="x", y="y", hue="label", data=df, palette="Paired")
 
     return arry_all, names_all2, condition2

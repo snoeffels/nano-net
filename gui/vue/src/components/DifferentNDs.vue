@@ -32,14 +32,14 @@
                         v-model="conditionName"
                         @change="handleNameChange"
                         label="Name"
-                        style="padding-left: 33px; padding-top: 20px; width: 80%"
+                        style="padding-left: 33px; padding-top: 20px; width: 100%"
                     />
 
-                    <input
-                        v-model="color"
-                        type="color"
-                        style="width: 33px;margin-top: 34px;padding-left: 10px"
-                    />
+<!--                    <input-->
+<!--                        v-model="color"-->
+<!--                        type="color"-->
+<!--                        style="width: 33px;margin-top: 34px;padding-left: 10px"-->
+<!--                    />-->
                   </div>
 
                   <v-file-input
@@ -59,19 +59,20 @@
                   <legend style="margin-left: 24px; padding: 0.2em 0.8em; color: rgba(0,0,0,0.6);font-size: 12px">Input
                     2
                   </legend>
+
                   <div style="display:flex">
                     <v-text-field
                         v-model="condition2Name"
                         @change="handleNameChange2"
                         label="Name"
-                        style="padding-left: 33px; padding-top: 20px; width: 80%"
+                        style="padding-left: 33px; padding-top: 20px; width: 100%"
                     />
 
-                    <input
-                        v-model="color2"
-                        type="color"
-                        style="width: 33px;margin-top: 34px;padding-left: 10px"
-                    />
+<!--                    <input-->
+<!--                        v-model="color2"-->
+<!--                        type="color"-->
+<!--                        style="width: 33px;margin-top: 34px;padding-left: 10px"-->
+<!--                    />-->
                   </div>
 
 
@@ -99,14 +100,14 @@
                         v-model="condition3Name"
                         @change="handleNameChange3"
                         label="Name"
-                        style="padding-left: 33px; padding-top: 20px; width: 80%"
+                        style="padding-left: 33px; padding-top: 20px; width: 100%"
                     />
 
-                    <input
-                        v-model="color3"
-                        type="color"
-                        style="width: 33px;margin-top: 34px;padding-left: 10px"
-                    />
+<!--                    <input-->
+<!--                        v-model="color3"-->
+<!--                        type="color"-->
+<!--                        style="width: 33px;margin-top: 34px;padding-left: 10px"-->
+<!--                    />-->
                   </div>
 
                   <v-file-input
@@ -131,14 +132,14 @@
                         v-model="condition4Name"
                         @change="handleNameChange4"
                         label="Name"
-                        style="padding-left: 33px; padding-top: 20px; width: 80%"
+                        style="padding-left: 33px; padding-top: 20px; width: 100%"
                     />
 
-                    <input
-                        v-model="color4"
-                        type="color"
-                        style="width: 33px;margin-top: 34px;padding-left: 10px"
-                    />
+<!--                    <input-->
+<!--                        v-model="color4"-->
+<!--                        type="color"-->
+<!--                        style="width: 33px;margin-top: 34px;padding-left: 10px"-->
+<!--                    />-->
                   </div>
 
                   <v-file-input
@@ -198,7 +199,7 @@
                 small
                 color="primary"
                 @click="handleNext2"
-                :disabled="false"
+                :disabled="globals.order.length !== orderItems.length"
             >
               Next
             </v-btn>
@@ -250,10 +251,6 @@
                         step="1"
                     />
                     <v-text-field
-                        v-model="globals.maxFeatures"
-                        label="Max features"
-                    />
-                    <v-text-field
                         v-model="globals.maxDepth"
                         label="Max depth"
                         type="number"
@@ -273,7 +270,7 @@
                     step="0.01"
                 />
                 <v-text-field
-                    v-model="globals.nNeighbors"
+                    v-model="globals.perplexity"
                     label="Perplexity"
                     type="number"
                     step="1"
@@ -297,7 +294,7 @@
                 />
                 <v-text-field
                     v-model="globals.nNeighbors"
-                    label="N-Estimators"
+                    label="N-Neighbors"
                     type="number"
                     step="1"
                 />
@@ -786,13 +783,13 @@
                 >
                   Rerun
                 </v-btn>
-                <v-btn outlined small color="error" class="ml-3" @click="cancel" :disabled="done">
-                  Cancel
-                </v-btn>
-                <v-btn text small @click="e6 = 6" class="ml-3">
+<!--                <v-btn outlined small color="error" class="ml-3" @click="cancel" :disabled="done">-->
+<!--                  Cancel-->
+<!--                </v-btn>-->
+                <v-btn text small @click="e6 = 6" class="ml-3" :disabled="!done">
                   Back
                 </v-btn>
-                <v-btn text small @click="$emit('back')" class="ml-3">
+                <v-btn text small @click="$emit('back')" class="ml-3" :disabled="!done">
                   Home
                 </v-btn>
               </v-col>
@@ -869,7 +866,6 @@ export default {
         nEstimators: 1000,
         minSamplesSplit: 2,
         minSamplesLeaf: 1,
-        maxFeatures: 'sqrt',
         maxDepth: 110,
         testSizeKnn: 0.2,
         nNeighbors: 3,
@@ -1079,6 +1075,15 @@ export default {
       }
     },
     run() {
+      this.done = false;
+      this.progress = 0;
+      this.progressSteps = 0;
+      this.progressCurrentStep = 0;
+      this.images.boxplot = [];
+      this.images.knn = [];
+      this.images.tsne = [];
+      this.images.rf = [];
+
       if (this.e6 === 3) {
         this.e6 = 4;
       }
@@ -1089,19 +1094,22 @@ export default {
 
       this.report = "";
 
+      let that = this;
       // eslint-disable-next-line no-undef
-      eel.run_different_nds();
+      eel.run_different_nds()(function () {
+        that.done = true;
+      });
     },
-    cancel() {
-      if (typeof eel === 'undefined' || this.progressCurrentStep === this.progressSteps) {
-        return;
-      }
-
-      this.done = true;
-
-      // eslint-disable-next-line no-undef
-      eel.cancel_different_nds();
-    },
+    // cancel() {
+    //   if (typeof eel === 'undefined' || this.progressCurrentStep === this.progressSteps) {
+    //     return;
+    //   }
+    //
+    //   this.done = true;
+    //
+    //   // eslint-disable-next-line no-undef
+    //   eel.cancel_different_nds();
+    // },
   },
   mounted() {
     if (typeof eel === 'undefined') {
