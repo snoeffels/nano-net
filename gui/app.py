@@ -3,6 +3,7 @@ import os
 import statistics
 import tkinter
 import tkinter.filedialog as filedialog
+import traceback
 from glob import glob
 from os import listdir
 from os.path import isfile, join
@@ -254,7 +255,10 @@ def cancel_same_nds():
 @eel.expose
 def run_different_nds():
     global PATHS, CONDI_LIST
-    semua(PATHS, CONDI_LIST, False)
+    try:
+        semua(PATHS, CONDI_LIST, False)
+    except Exception:
+        traceback.print_exc()
 
 
 @eel.expose
@@ -563,9 +567,9 @@ def knn_all(arry_all, condition2, order, dry_run=False):
                                                         random_state=12345)
 
     if dry_run:
-        model = KNeighborsClassifier(n_neighbors=nNeighbors)
+        model = KNeighborsClassifier(n_neighbors=int(nNeighbors))
     else:
-        model = KNeighborsClassifier(n_neighbors=OPTIMAL_NEIGHBORS)
+        model = KNeighborsClassifier(n_neighbors=int(OPTIMAL_NEIGHBORS))
 
     model.fit(X_train, y_train)
     predicted = model.predict(X_test)
@@ -583,9 +587,10 @@ def knn_all(arry_all, condition2, order, dry_run=False):
     # perform 10-fold cross validation
     for k in neighbors:
         if dry_run:
-            knn = KNeighborsClassifier(n_neighbors=nNeighbors)
+            knn = KNeighborsClassifier(n_neighbors=int(nNeighbors))
         else:
-            knn = KNeighborsClassifier(n_neighbors=OPTIMAL_NEIGHBORS)
+            print("OPTIMAL_NEIGHBORS used: " + str(OPTIMAL_NEIGHBORS))
+            knn = KNeighborsClassifier(n_neighbors=int(OPTIMAL_NEIGHBORS))
 
         scores = cross_val_score(knn, X_train, y_train, cv=8, scoring='accuracy')
         cv_scores.append(scores.mean())
