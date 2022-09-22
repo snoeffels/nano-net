@@ -13,7 +13,7 @@
               step="1"
           >
             Select inputs
-            <small>Summarize if needed</small>
+            <small>Select the path to the folders with your input images. Every folder can only contain images of one condition.</small>
           </v-stepper-step>
           <v-stepper-content step="1">
             <p>All whitespace or non alphanumerical characters will be removed from labels. Please specify at least two
@@ -175,7 +175,7 @@
               step="2"
           >
             Order of conditions
-            <small>Summarize if needed</small>
+            <small>Determines in which order the conditions will appear in the various plots at the end.</small>
           </v-stepper-step>
           <v-stepper-content step="2">
             <v-row
@@ -214,7 +214,7 @@
               step="3"
           >
             Parameter settings
-            <small>Summarize if needed</small>
+            <small>Set parameters for the Random Forest, t-SNE, and K-NN</small>
           </v-stepper-step>
           <v-stepper-content step="3">
             <v-row>
@@ -226,19 +226,22 @@
                   <v-col>
                     <v-text-field
                         v-model="globals.testSize"
-                        label="test_size"
+                        label="Train/Test split"
+                        hint="e.g. 0.2 means the RF will train on 80% of the data and test with 20%"
                         type="number"
                         step="0.01"
                     />
                     <v-text-field
                         v-model="globals.nEstimators"
                         label="N-Estimators"
+                        hint="The number of trees in the forest"
                         type="number"
                         step="1"
                     />
                     <v-text-field
                         v-model="globals.minSamplesSplit"
-                        label="Min samples split"
+                        label="Minimum samples split"
+                        hint="The minimum number of samples required to split an internal node (default: 2)"
                         type="number"
                         step="1"
                     />
@@ -246,13 +249,15 @@
                   <v-col>
                     <v-text-field
                         v-model="globals.minSamplesLeaf"
-                        label="Min samples leaf"
+                        label="Minimum leaf samples"
+                        hint="The minimum number of samples required to be at a leaf node (default: 1)"
                         type="number"
                         step="1"
                     />
                     <v-text-field
                         v-model="globals.maxDepth"
-                        label="Max depth"
+                        label="Maximal tree depth"
+                        hint="The maximum depth of the tree. If None, then nodes are expanded until all leaves are pure or until all leaves contain less than min_samples_split samples."
                         type="number"
                         step="1"
                     />
@@ -261,7 +266,7 @@
               </v-col>
               <v-col cols="3">
                 <h4>
-                  TSNE
+                  t-SNE
                 </h4>
                 <v-text-field
                     v-model="globals.nComponents"

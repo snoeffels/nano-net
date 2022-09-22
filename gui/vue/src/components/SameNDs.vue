@@ -12,8 +12,8 @@
               :complete="e6 > 1"
               step="1"
           >
-            Select input path
-            <small>Summarize if needed</small>
+            Input path
+            <small>Select the path to the folder with your input images</small>
           </v-stepper-step>
           <v-stepper-content step="1">
             <v-file-input
@@ -41,11 +41,11 @@
               :complete="e6 > 2"
               step="2"
           >
-            Type in pixel size
-            <small>Summarize if needed</small>
+            Pixel size
+            <small>Enter your pixel size in microns. (You can check this, for example, in ImageJ/Fiji)</small>
           </v-stepper-step>
           <v-stepper-content step="2">
-            <v-text-field
+            <v-text-fieldW
                 v-model="globals.pixel"
                 class="mt-0 pt-0"
                 type="number"
@@ -70,8 +70,8 @@
               :complete="e6 > 3"
               step="3"
           >
-            Observe segmentation
-            <small>Summarize if needed</small>
+            Output path
+            <small>Select a path to an output folder where results will be saved.</small>
           </v-stepper-step>
           <v-stepper-content step="3">
 
@@ -96,8 +96,8 @@
 
           <!-- STEP 4 -->
           <v-stepper-step step="4">
-            Save results
-            <small>Summarize if needed</small>
+            Run
+            <small>NanoNet will automatically start running</small>
           </v-stepper-step>
           <v-stepper-content step="4">
             <v-progress-linear
