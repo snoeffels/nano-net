@@ -1,6 +1,6 @@
 # nano-net
 The nice NanoNet GUI is coming soon.
-To use the Jupyter notebook NanoNet download the NanNet.ipynb and follow the stepps at the very bottom.
+To use the Jupyter notebook NanoNet download the NanNet.ipynb and follow the steps at the very bottom.
 
 The NanoNet workflow follows the general image analysis pipeline and consist of image pre-processing, followed by a series of segmentation steps and the extraction of nanodomain (ND) features. The only input required is the size of the images in microns. First, images of equal size are pre-processed by applying a gaussian blur (𝜎=0.9), which is followed by binarization based on the pixel intensity distribution. Next, a morphological closing, consisting of dilation and erosion assures speckle noise removal inside foreground domains. Further, pixels at image edges are removed, since they would lead to a bias in various ND features such as area for example. By using Euclidean distance transform, distances are calculated from which coordinates of local maximum intensity peaks are extracted. From this, a mask is created, which is passed on to a watershed algorithm to separate touching foreground objects. Labels are then assigned to each foreground object and features from individual NDs as well as whole image properties are extracted. These features are then automatically saved as an excel file in allocation determined by the user. 
 
