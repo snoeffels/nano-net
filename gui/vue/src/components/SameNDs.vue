@@ -45,7 +45,7 @@
             <small>Enter your pixel size in microns. (You can check this, for example, in ImageJ/Fiji)</small>
           </v-stepper-step>
           <v-stepper-content step="2">
-            <v-text-fieldW
+            <v-text-field
                 v-model="globals.pixel"
                 class="mt-0 pt-0"
                 type="number"
