@@ -237,6 +237,10 @@ def cancel_different_nds():
 def paths(mypath):
     global CANCEL_SAME_NDS
     CANCEL_SAME_NDS = False
+    
+    # to fix changing plot style bug we need to set those properties for every execution
+    sns.set_style('white')
+    
     p = []
     names = []
     onlyfiles = [f for f in listdir(mypath) if isfile(join(mypath, f))]
@@ -370,6 +374,10 @@ def pic(i, p, image, thresh3, closed3, cleared3, image_label_overlay4, label_ima
 
 ##################################################################### for many statistics:
 def semua(l, order, dry_run=False):
+
+    # to fix changing plot style bug we need to set those properties for every execution
+    sns.set_style('white')
+
     df_all = pd.DataFrame()
     df_list = [0] * len(l)
     names_all = [0] * len(l)
@@ -547,8 +555,6 @@ def knn_all(arry_all, condition2, order, dry_run=False):
         ACCURACY_BALANCED = accuracy_balanced
         OPTIMAL_NEIGHBORS = optimal_k
         return optimal_k, accuracy, accuracy_balanced
-
-    sns.set_style("white")
 
     fig_dims = (6, 6)
     plt.subplots(figsize=fig_dims)
