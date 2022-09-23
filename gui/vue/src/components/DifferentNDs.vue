@@ -35,11 +35,11 @@
                         style="padding-left: 33px; padding-top: 20px; width: 100%"
                     />
 
-<!--                    <input-->
-<!--                        v-model="color"-->
-<!--                        type="color"-->
-<!--                        style="width: 33px;margin-top: 34px;padding-left: 10px"-->
-<!--                    />-->
+                    <input
+                       v-model="color"
+                       type="color"
+                       style="width: 33px;margin-top: 34px;padding-left: 10px"
+                    />
                   </div>
 
                   <v-file-input
@@ -271,18 +271,21 @@
                 <v-text-field
                     v-model="globals.nComponents"
                     label="N-Components"
+                    hint="Dimension of the embedded space (default: 2)"
                     type="number"
                     step="0.01"
                 />
                 <v-text-field
                     v-model="globals.perplexity"
                     label="Perplexity"
+                    hint="Consider selecting a value between 5 and 50. Different values can result in significantly different results. The perplexity must be less that the number of samples."
                     type="number"
                     step="1"
                 />
                 <v-text-field
                     v-model="globals.nIter"
                     label="N-Iterations"
+                    hint="Maximum number of iterations for the optimization. Should be at least 250"
                     type="number"
                     step="1"
                 />
@@ -293,14 +296,16 @@
                 </h4>
                 <v-text-field
                     v-model="globals.testSizeKnn"
-                    label="test_size"
+                    label="Train/Test split"
+                    hint="e.g. 0.2 means K-NN will train on 80% of the data and test with 20%"
                     type="number"
                     step="0.01"
                 />
                 <v-text-field
                     v-model="globals.nNeighbors"
-                    label="N-Neighbors"
+                    label="Maximal number of neighbors"
                     type="number"
+                    hint="e.g. 10 will evaluate the performance of the classifier with each k = 1, 2, 3, ... , 10"
                     step="1"
                 />
               </v-col>
@@ -340,6 +345,7 @@
                 label="Optimal number of neighbors"
                 type="number"
                 step="1"
+                readonly
                 style="width: 150px"
             />
 
@@ -371,6 +377,7 @@
                     class="ml-2"
                     v-model="checkboxes.area"
                     @change="setFeatures('area')"
+                    hint="Test 1 2 3"
                     checked
                     label="ND area (microns)"
                 />
