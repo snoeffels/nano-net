@@ -32,13 +32,13 @@
                         v-model="conditionName"
                         @change="handleNameChange"
                         label="Name"
-                        style="padding-left: 33px; padding-top: 20px; width: 100%"
+                        style="padding-left: 33px; padding-top: 20px; width: 80%"
                     />
 
                     <input
-                       v-model="color"
-                       type="color"
-                       style="width: 33px;margin-top: 34px;padding-left: 10px"
+                        v-model="color"
+                        type="color"
+                        style="width: 33px;margin-top: 34px;padding-left: 10px"
                     />
                   </div>
 
@@ -68,11 +68,11 @@
                         style="padding-left: 33px; padding-top: 20px; width: 100%"
                     />
 
-<!--                    <input-->
-<!--                        v-model="color2"-->
-<!--                        type="color"-->
-<!--                        style="width: 33px;margin-top: 34px;padding-left: 10px"-->
-<!--                    />-->
+                    <input
+                        v-model="color2"
+                        type="color"
+                        style="width: 33px;margin-top: 34px;padding-left: 10px"
+                    />
                   </div>
 
 
@@ -100,14 +100,14 @@
                         v-model="condition3Name"
                         @change="handleNameChange3"
                         label="Name"
-                        style="padding-left: 33px; padding-top: 20px; width: 100%"
+                        style="padding-left: 33px; padding-top: 20px; width: 80%"
                     />
 
-<!--                    <input-->
-<!--                        v-model="color3"-->
-<!--                        type="color"-->
-<!--                        style="width: 33px;margin-top: 34px;padding-left: 10px"-->
-<!--                    />-->
+                    <input
+                        v-model="color3"
+                        type="color"
+                        style="width: 33px;margin-top: 34px;padding-left: 10px"
+                    />
                   </div>
 
                   <v-file-input
@@ -132,14 +132,14 @@
                         v-model="condition4Name"
                         @change="handleNameChange4"
                         label="Name"
-                        style="padding-left: 33px; padding-top: 20px; width: 100%"
+                        style="padding-left: 33px; padding-top: 20px; width: 80%"
                     />
 
-<!--                    <input-->
-<!--                        v-model="color4"-->
-<!--                        type="color"-->
-<!--                        style="width: 33px;margin-top: 34px;padding-left: 10px"-->
-<!--                    />-->
+                    <input
+                        v-model="color4"
+                        type="color"
+                        style="width: 33px;margin-top: 34px;padding-left: 10px"
+                    />
                   </div>
 
                   <v-file-input
@@ -280,6 +280,8 @@
                     label="Perplexity"
                     hint="Consider selecting a value between 5 and 50. Different values can result in significantly different results. The perplexity must be less that the number of samples."
                     type="number"
+                    @change="handlePerplexityChange"
+                    :max="sampleSize"
                     step="1"
                 />
                 <v-text-field
@@ -314,7 +316,7 @@
                 small
                 color="primary"
                 @click="handleNext3"
-                :disabled="false"
+                :disabled="globals.perplexity > sampleSize"
             >
               Next
             </v-btn>
@@ -605,7 +607,7 @@
                     </v-toolbar-title>
                   </v-toolbar>
 
-                  <p style="color: white; overflow: auto" class="pa-2" v-html="report" />
+                  <p style="color: white; overflow: auto" class="pa-2" v-html="report"/>
                 </v-card>
               </v-dialog>
 
@@ -647,7 +649,8 @@
                             </v-toolbar-title>
                           </v-toolbar>
 
-                          <v-img :src="srcFromImage(image.src)" style="max-height: calc(100vh - 56px);max-width: 100vw"/>
+                          <v-img :src="srcFromImage(image.src)"
+                                 style="max-height: calc(100vh - 56px);max-width: 100vw"/>
                         </v-card>
                       </v-dialog>
                     </div>
@@ -690,7 +693,8 @@
                             </v-toolbar-title>
                           </v-toolbar>
 
-                          <v-img :src="srcFromImage(image.src)" style="max-height: calc(100vh - 56px);max-width: 100vw"/>
+                          <v-img :src="srcFromImage(image.src)"
+                                 style="max-height: calc(100vh - 56px);max-width: 100vw"/>
                         </v-card>
                       </v-dialog>
                     </div>
@@ -733,7 +737,8 @@
                             </v-toolbar-title>
                           </v-toolbar>
 
-                          <v-img :src="srcFromImage(image.src)" style="max-height: calc(100vh - 56px);max-width: 100vw"/>
+                          <v-img :src="srcFromImage(image.src)"
+                                 style="max-height: calc(100vh - 56px);max-width: 100vw"/>
                         </v-card>
                       </v-dialog>
                     </div>
@@ -776,7 +781,8 @@
                             </v-toolbar-title>
                           </v-toolbar>
 
-                          <v-img :src="srcFromImage(image.src)" style="max-height: calc(100vh - 56px);max-width: 100vw"/>
+                          <v-img :src="srcFromImage(image.src)"
+                                 style="max-height: calc(100vh - 56px);max-width: 100vw"/>
                         </v-card>
                       </v-dialog>
                     </div>
@@ -795,9 +801,9 @@
                 >
                   Rerun
                 </v-btn>
-<!--                <v-btn outlined small color="error" class="ml-3" @click="cancel" :disabled="done">-->
-<!--                  Cancel-->
-<!--                </v-btn>-->
+                <!--                <v-btn outlined small color="error" class="ml-3" @click="cancel" :disabled="done">-->
+                <!--                  Cancel-->
+                <!--                </v-btn>-->
                 <v-btn text small @click="e6 = 6" class="ml-3" :disabled="!done">
                   Back
                 </v-btn>
@@ -839,6 +845,7 @@ export default {
       features: ['area', 'mean_area', 'var_area', 'density', 'intensity', 'relative_intensity', 'mean_intensity', 'var_intensity', 'max_intensity', 'mean_eccentricity', 'equivalent_diameter_area', 'mean_equivalent_diameter_area', 'perimeter', 'mean_perimeter', 'nano_domain_quantity', 'sci', 'density_microns'],
       orderItems: [],
       pathItems: [],
+      colorItems: [],
       images: {
         boxplot: [],
         tsne: [],
@@ -871,9 +878,11 @@ export default {
       },
       showReport: false,
       report: "",
+      sampleSize: 0,
       globals: {
         order: [],
         paths: [],
+        colors: [],
         testSize: 0.2,
         nEstimators: 1000,
         minSamplesSplit: 2,
@@ -882,7 +891,7 @@ export default {
         testSizeKnn: 0.2,
         nNeighbors: 3,
         nComponents: 2,
-        perplexity: 20,
+        perplexity: 0,
         nIter: 500,
         acuracyKnn: 0.0,
         optimalNumberOfNeighbors: 0,
@@ -896,49 +905,34 @@ export default {
     handleNext() {
       this.globals.order = [];
       this.orderItems = [];
+      this.colorItems = [];
 
       if (this.fileInputValue) {
         this.orderItems.push(this.conditionName)
         this.pathItems.push(this.path)
+        this.colorItems.push(this.color)
         this.globals.order.push(this.conditionName)
-
-        if (typeof eel !== 'undefined') {
-          // eslint-disable-next-line no-undef
-          eel.set_name_and_color(this.conditionName, this.color);
-        }
       }
 
       if (this.fileInput2Value) {
         this.orderItems.push(this.condition2Name)
         this.pathItems.push(this.path2)
+        this.colorItems.push(this.color2)
         this.globals.order.push(this.condition2Name)
-
-        if (typeof eel !== 'undefined') {
-          // eslint-disable-next-line no-undef
-          eel.set_name_and_color_2(this.condition2Name, this.color2);
-        }
       }
 
       if (this.fileInput3Value) {
         this.orderItems.push(this.condition3Name)
         this.pathItems.push(this.path3);
+        this.colorItems.push(this.color3)
         this.globals.order.push(this.condition3Name)
-
-        if (typeof eel !== 'undefined') {
-          // eslint-disable-next-line no-undef
-          eel.set_name_and_color_3(this.condition3Name, this.color3);
-        }
       }
 
       if (this.fileInput4Value) {
         this.orderItems.push(this.condition4Name)
         this.pathItems.push(this.path4)
+        this.colorItems.push(this.color4)
         this.globals.order.push(this.condition4Name)
-
-        if (typeof eel !== 'undefined') {
-          // eslint-disable-next-line no-undef
-          eel.set_name_and_color_4(this.condition4Name, this.color4);
-        }
       }
 
       this.e6 = 2;
@@ -948,11 +942,16 @@ export default {
 
       for (var i = 0; i < this.globals.order.length; i++) {
         this.globals.paths.push(this.pathItems[this.orderItems.indexOf(this.globals.order[i])]);
+        this.globals.colors.push(this.colorItems[this.orderItems.indexOf(this.globals.colors[i])]);
       }
 
+      var that = this;
       if (typeof eel !== 'undefined') {
         // eslint-disable-next-line no-undef
-        eel.set_conditions_and_paths(this.globals.order, this.globals.paths);
+        eel.set_conditions_paths_colors(this.globals.order, this.globals.paths, this.globals.colors)(function (sampleSize) {
+          that.sampleSize = sampleSize;
+          that.perplexity = sampleSize;
+        });
 
       }
 
@@ -990,6 +989,11 @@ export default {
       }
 
       this.e6 = 6;
+    },
+    handlePerplexityChange() {
+      if(this.globals.perplexity > this.sampleSize) {
+        this.globals.perplexity = this.sampleSize;
+      }
     },
     handleNameChange() {
       this.conditionName = this.conditionName.replace(/[^a-zA-Z0-9]+/gi, '');
@@ -1136,6 +1140,7 @@ export default {
 
       return this.images[index].push(image);
     }
+
     let addImage = addImageUnbound.bind(this);
 
     // eslint-disable-next-line no-undef
@@ -1144,6 +1149,7 @@ export default {
     function printToReportUnbound(text) {
       this.report += text.replace(/\n/g, "<br />") + '<br />------------------------------------------------<br />';
     }
+
     let printToReport = printToReportUnbound.bind(this);
 
     // eslint-disable-next-line no-undef
