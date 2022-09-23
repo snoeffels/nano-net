@@ -44,23 +44,13 @@ from sklearn.neighbors import KNeighborsClassifier
 OUTPUT_PATH = ""
 
 PATH_1 = ""
-NAME_1 = ""
-COLOR_1 = ""
-
 PATH_2 = ""
-NAME_2 = ""
-COLOR_2 = ""
-
 PATH_3 = ""
-NAME_3 = ""
-COLOR_3 = ""
-
 PATH_4 = ""
-NAME_4 = ""
-COLOR_4 = ""
 
 PATHS = []
 FEATURES = []
+COLORS = []
 
 ACCURACY = 0
 ACCURACY_BALANCED = 0
@@ -79,6 +69,7 @@ nIter = 500
 
 # ----------------------------------------------------------------
 
+SAMPLE_SIZE = 10
 CANCEL_SAME_NDS = False
 CANCEL_DIFFERENT_NDS = False
 CONDI_LIST = []
@@ -108,42 +99,6 @@ def set_pixel(p):
 
 
 @eel.expose
-def set_name_and_color(name, color):
-    global NAME_1, COLOR_1
-    NAME_1 = name
-    COLOR_1 = color
-    print("NAME_1 was set to: " + str(NAME_1))
-    print("COLOR_1 was set to: " + str(COLOR_1))
-
-
-@eel.expose
-def set_name_and_color_2(name, color):
-    global NAME_2, COLOR_2
-    NAME_2 = name
-    COLOR_2 = color
-    print("NAME_2 was set to: " + str(NAME_2))
-    print("COLOR_2 was set to: " + str(COLOR_2))
-
-
-@eel.expose
-def set_name_and_color_3(name, color):
-    global NAME_3, COLOR_3
-    NAME_3 = name
-    COLOR_3 = color
-    print("NAME_3 was set to: " + str(NAME_3))
-    print("COLOR_3 was set to: " + str(COLOR_3))
-
-
-@eel.expose
-def set_name_and_color_4(name, color):
-    global NAME_4, COLOR_4
-    NAME_4 = name
-    COLOR_4 = color
-    print("NAME_4 was set to: " + str(NAME_4))
-    print("COLOR_4 was set to: " + str(COLOR_4))
-
-
-@eel.expose
 def set_parameters(parameters):
     global testSize, nEstimators, minSamplesLeaf, minSamplesSplit, maxDepth, testSizeKnn, nNeighbors, nComponents, perplexity, nIter
     testSize = parameters['testSize']
@@ -160,12 +115,12 @@ def set_parameters(parameters):
 
 
 @eel.expose
-def set_conditions_and_paths(conditions, paths):
-    global CONDI_LIST, PATHS
+def set_conditions_paths_colors(conditions, paths, colors):
+    global CONDI_LIST, PATHS, COLORS
     CONDI_LIST = conditions
     PATHS = paths
-    print("CONDI_LIST was set to: " + str(conditions))
-    print("PATHS was set to: " + str(paths))
+    COLORS = colors
+    return 10  # return sample size here
 
 
 @eel.expose
@@ -190,6 +145,12 @@ def get_accuracy():
         "accuracy": accuracy,
         "neighbors": optimal_k,
     }
+
+
+@eel.expose
+def get_sample_size():
+    global SAMPLE_SIZE
+    return SAMPLE_SIZE
 
 
 @eel.expose
@@ -931,7 +892,6 @@ def calculate_sci(bild):
 def mybin(image, pixel):
     # pixelsize= (9.02/image.shape[0])**2 # 1 pixel has 0.0451 microns-> need squared
     # pixellength=9.02/image.shape[0]
-
 
     pixel = float(pixel)
     pixelsize = (pixel / image.shape[0]) ** 2  # enter the pixelsize in microns
