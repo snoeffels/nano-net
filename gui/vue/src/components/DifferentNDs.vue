@@ -214,10 +214,39 @@
               :complete="e6 > 3"
               step="3"
           >
+            Pixel size
+            <small>Enter your pixel size in microns. (You can check this, for example, in ImageJ/Fiji)</small>
+          </v-stepper-step>
+          <v-stepper-content step="3">
+            <v-text-field
+                v-model="globals.pixel"
+                class="mt-0 pt-0"
+                type="number"
+                step="0.01"
+                style="width: 60px"
+            />
+
+            <v-btn
+                small
+                color="primary"
+                @click="setPixel"
+            >
+              Next
+            </v-btn>
+            <v-btn text small @click="e6 = 2" class="ml-3">
+              Back
+            </v-btn>
+          </v-stepper-content>
+
+          <!-- STEP 4 -->
+          <v-stepper-step
+              :complete="e6 > 4"
+              step="4"
+          >
             Parameter settings
             <small>Set parameters for the Random Forest, t-SNE, and K-NN</small>
           </v-stepper-step>
-          <v-stepper-content step="3">
+          <v-stepper-content step="4">
             <v-row>
               <v-col cols="6">
                 <h4>
@@ -321,20 +350,20 @@
             >
               Next
             </v-btn>
-            <v-btn text small @click="e6 = 2" class="ml-3">
+            <v-btn text small @click="e6 = 3" class="ml-3">
               Back
             </v-btn>
           </v-stepper-content>
 
-          <!-- STEP 4 -->
+          <!-- STEP 5 -->
           <v-stepper-step
-              :complete="e6 > 4"
-              step="4"
+              :complete="e6 > 5"
+              step="5"
           >
             Estimation of K-NN optimal number
             <small>Summarize if needed</small>
           </v-stepper-step>
-          <v-stepper-content step="4">
+          <v-stepper-content step="5">
             <v-text-field
                 v-model="globals.acuracyKnn"
                 label="K-NN Acuracy"
@@ -365,15 +394,15 @@
             </v-btn>
           </v-stepper-content>
 
-          <!-- STEP 5 -->
+          <!-- STEP 6 -->
           <v-stepper-step
-              :complete="e6 > 5"
-              step="5"
+              :complete="e6 > 6"
+              step="6"
           >
             Select features
             <small>Summarize if needed</small>
           </v-stepper-step>
-          <v-stepper-content step="5">
+          <v-stepper-content step="6">
             <v-row>
               <v-col>
                 <v-checkbox
@@ -515,15 +544,15 @@
             </v-btn>
           </v-stepper-content>
 
-          <!-- STEP 6 -->
+          <!-- STEP 7 -->
           <v-stepper-step
-              :complete="e6 > 6"
-              step="6"
+              :complete="e6 > 7"
+              step="7"
           >
             Output path
             <small>Select a path to an output folder where results will be saved.</small>
           </v-stepper-step>
-          <v-stepper-content step="6">
+          <v-stepper-content step="7">
             <v-file-input
                 @click.prevent="selectOutputFolder"
                 @click:clear="fileOutputValue = null"
@@ -533,7 +562,7 @@
             <v-btn
                 small
                 color="primary"
-                @click="e6 = 7;run()"
+                @click="e6 = 8;run()"
                 :disabled="!fileOutputValue"
             >
               Next
@@ -543,12 +572,12 @@
             </v-btn>
           </v-stepper-content>
 
-          <!-- STEP 7 -->
-          <v-stepper-step step="7">
+          <!-- STEP 8 -->
+          <v-stepper-step step="8">
             Save results
             <small>Summarize if needed</small>
           </v-stepper-step>
-          <v-stepper-content step="7">
+          <v-stepper-content step="8">
 
             <v-progress-linear
                 readonly
@@ -884,6 +913,7 @@ export default {
         order: [],
         paths: [],
         colors: [],
+        pixel: 9.02,
         testSize: 0.2,
         nEstimators: 1000,
         minSamplesSplit: 2,
@@ -973,7 +1003,7 @@ export default {
         })
       }
 
-      this.e6 = 4;
+      this.e6 = 5;
     },
     handleNext4() {
       if (typeof eel !== 'undefined') {
@@ -981,7 +1011,7 @@ export default {
         eel.set_optimal_neighbors(this.globals.optimalNumberOfNeighbors);
       }
 
-      this.e6 = 5;
+      this.e6 = 6;
     },
     handleNext5() {
       if (typeof eel !== 'undefined') {
@@ -989,7 +1019,7 @@ export default {
         eel.set_features(this.features);
       }
 
-      this.e6 = 6;
+      this.e6 = 7;
     },
     handlePerplexityChange() {
       if (this.globals.perplexity > this.sampleSize) {
@@ -1080,6 +1110,15 @@ export default {
         that.fileOutputValue = new File(["folder"], path);
       })
     },
+    setPixel() {
+      this.e6 = 4;
+      if (typeof eel === 'undefined') {
+        return;
+      }
+
+      // eslint-disable-next-line no-undef
+      eel.set_pixel(this.globals.pixel);
+    },
     setFeatures(value) {
       if (this.features.find(e => e === value)) {
         this.features = this.features.filter(e => e !== value);
@@ -1117,16 +1156,6 @@ export default {
         that.done = true;
       });
     },
-    // cancel() {
-    //   if (typeof eel === 'undefined' || this.progressCurrentStep === this.progressSteps) {
-    //     return;
-    //   }
-    //
-    //   this.done = true;
-    //
-    //   // eslint-disable-next-line no-undef
-    //   eel.cancel_different_nds();
-    // },
   },
   mounted() {
     if (typeof eel === 'undefined') {
