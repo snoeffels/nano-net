@@ -516,20 +516,6 @@ def tsn_all(arry_all, names_all2, condition2):  # tnse
     for i in range(df.shape[0]):
         plt.text(x=df.x[i] + 0.3, y=df.y[i] + 0.3, s=df.img_name[i])
 
-    fig_dims = (10, 10)
-    plt.subplots(figsize=fig_dims)
-    sns.scatterplot(x="x", y="y", hue="label", data=df, palette="Paired")
-
-    pltPath = os.path.join(OUTPUT_PATH, "tsne-2") + ".png"
-
-    plt.savefig(pltPath, format='png')
-    plt.close()
-
-    tmp = open(pltPath, "rb")
-    eel.add_image_different_nd(
-        {'src': base64.b64encode(tmp.read()).decode('utf-8'), 'title': "tsne-2.png"}, 2, 2, "tsne")
-    tmp.close()
-
     return arry_all, names_all2, condition2
 
 
@@ -605,13 +591,9 @@ def knn_all(arry_all, condition2, order, dry_run=False):
 
     fig_dims = (6, 6)
     plt.subplots(figsize=fig_dims)
-    sns.scatterplot(X_test[:, 0], X_test[:, 6], hue_order=order, s=50, palette="Paired")
+    sns.scatterplot(X_test[:, 0], X_test[:, 6], hue=predicted, hue_order=order, s=50, palette="Paired")
 
-    fig_dims = (6, 6)
-    plt.subplots(figsize=fig_dims)
-    sns.scatterplot(X_test[:, 0], X_test[:, 6], s=50, hue_order=order, palette="Paired")
-
-    pltPath = os.path.join(OUTPUT_PATH, "knn") + ".png"
+    pltPath = os.path.join(OUTPUT_PATH, "knn_predicted") + ".png"
     plt.savefig(pltPath, format='png')
     plt.cla()
     plt.clf()
@@ -619,7 +601,22 @@ def knn_all(arry_all, condition2, order, dry_run=False):
 
     tmp = open(pltPath, "rb")
     eel.add_image_different_nd(
-        {'src': base64.b64encode(tmp.read()).decode('utf-8'), 'title': "knn.png"}, 1, 1, "knn")
+        {'src': base64.b64encode(tmp.read()).decode('utf-8'), 'title': "knn_predicted.png"}, 1, 1, "knn")
+    tmp.close()
+
+    fig_dims = (6, 6)
+    plt.subplots(figsize=fig_dims)
+    sns.scatterplot(X_test[:, 0], X_test[:, 6], hue=y_test, hue_order=order,  s=50, palette="Paired")
+
+    pltPath = os.path.join(OUTPUT_PATH, "knn_true") + ".png"
+    plt.savefig(pltPath, format='png')
+    plt.cla()
+    plt.clf()
+    plt.close()
+
+    tmp = open(pltPath, "rb")
+    eel.add_image_different_nd(
+        {'src': base64.b64encode(tmp.read()).decode('utf-8'), 'title': "knn_true.png"}, 1, 1, "knn")
     tmp.close()
 
     return arry_all, condition2

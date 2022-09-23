@@ -517,8 +517,8 @@
               :complete="e6 > 6"
               step="6"
           >
-            Observe segmentation
-            <small>Summarize if needed</small>
+          Output path
+            <small>Select a path to an output folder where results will be saved.</small>
           </v-stepper-step>
           <v-stepper-content step="6">
             <v-file-input
@@ -565,11 +565,11 @@
               </v-tab>
 
               <v-tab>
-                TSNE
+                t-SNE
               </v-tab>
 
               <v-tab>
-                Knn
+                K-NN
               </v-tab>
 
               <v-tab>
