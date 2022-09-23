@@ -13,7 +13,8 @@
               step="1"
           >
             Select inputs
-            <small>Select the path to the folders with your input images. Every folder can only contain images of one condition.</small>
+            <small>Select the path to the folders with your input images. Every folder can only contain images of one
+              condition.</small>
           </v-stepper-step>
           <v-stepper-content step="1">
             <p>All whitespace or non alphanumerical characters will be removed from labels. Please specify at least two
@@ -519,7 +520,7 @@
               :complete="e6 > 6"
               step="6"
           >
-          Output path
+            Output path
             <small>Select a path to an output folder where results will be saved.</small>
           </v-stepper-step>
           <v-stepper-content step="6">
@@ -991,7 +992,7 @@ export default {
       this.e6 = 6;
     },
     handlePerplexityChange() {
-      if(this.globals.perplexity > this.sampleSize) {
+      if (this.globals.perplexity > this.sampleSize) {
         this.globals.perplexity = this.sampleSize;
       }
     },
