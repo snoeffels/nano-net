@@ -15,7 +15,7 @@
           width="50px"
         />
 
-        <h2>Nano Signaling Lab</h2>
+        <h2>NanoNet</h2>
       </div>
 
       <v-spacer></v-spacer>

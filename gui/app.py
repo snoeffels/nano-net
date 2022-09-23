@@ -524,43 +524,37 @@ def knn_all(arry_all, condition2, order, dry_run=False):
     MinMaxScaler = preprocessing.MinMaxScaler()
     arry_norm = MinMaxScaler.fit_transform(arry_all)
 
-    X_train, X_test, y_train, y_test = train_test_split(arry_norm, condition2, test_size=float(testSizeKnn),
-                                                        random_state=12345)
+    X_train, X_test, y_train, y_test = train_test_split(arry_norm, condition2, test_size=float(testSizeKnn))
 
-    if dry_run:
-        model = KNeighborsClassifier(n_neighbors=int(nNeighbors))
-    else:
-        model = KNeighborsClassifier(n_neighbors=int(OPTIMAL_NEIGHBORS))
+    nNeighbors = int(nNeighbors)
+    neighbors = list(range(1, nNeighbors + 1, 1))
 
-    model.fit(X_train, y_train)
-    predicted = model.predict(X_test)
-    print(predicted)
-    print(y_test)
-    accuracy = accuracy_score(y_test, predicted)
-    print("accuracy: {}".format(accuracy))
-    accuracy_balanced = balanced_accuracy_score(y_test, predicted)
-    print("accuracy_balanced: {}".format(accuracy_balanced))
-    neighbors = list(range(1, 9, 2))
-
+    print(neighbors)
     # empty list that will hold cv scores
     cv_scores = []
 
     # perform 10-fold cross validation
     for k in neighbors:
-        if dry_run:
-            knn = KNeighborsClassifier(n_neighbors=int(nNeighbors))
-        else:
-            print("OPTIMAL_NEIGHBORS used: " + str(OPTIMAL_NEIGHBORS))
-            knn = KNeighborsClassifier(n_neighbors=int(OPTIMAL_NEIGHBORS))
-
+        knn = KNeighborsClassifier(n_neighbors=int(k))
         scores = cross_val_score(knn, X_train, y_train, cv=8, scoring='accuracy')
         cv_scores.append(scores.mean())
+
     # changing to misclassification error
     mse = [1 - x for x in cv_scores]
 
     # determining best k
     optimal_k = neighbors[mse.index(min(mse))]
     print("The optimal number of neighbors is {}".format(optimal_k))
+    model = KNeighborsClassifier(n_neighbors=optimal_k)
+    model.fit(X_train, y_train)
+    predicted = model.predict(X_test)
+    accuracy = accuracy_score(y_test, predicted)
+    accuracy_balanced = balanced_accuracy_score(y_test, predicted)
+
+    print(predicted)
+    print(y_test)
+    print("accuracy: {}".format(accuracy))
+    print("accuracy_balanced: {}".format(accuracy_balanced))
 
     if dry_run:
         ACCURACY = accuracy
