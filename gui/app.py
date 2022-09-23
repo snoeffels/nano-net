@@ -471,7 +471,7 @@ def tsn_all(arry_all, names_all2, condition2):  # tnse
 
     tmp = open(pltPath, "rb")
     eel.add_image_different_nd(
-        {'src': base64.b64encode(tmp.read()).decode('utf-8'), 'title': "tsne.png"}, 2, 1, "tsne")
+        {'src': base64.b64encode(tmp.read()).decode('utf-8'), 'title': "tsne.png"}, 1, 1, "tsne")
     tmp.close()
 
     for i in range(df.shape[0]):
@@ -562,7 +562,7 @@ def knn_all(arry_all, condition2, order, dry_run=False):
 
     tmp = open(pltPath, "rb")
     eel.add_image_different_nd(
-        {'src': base64.b64encode(tmp.read()).decode('utf-8'), 'title': "knn_predicted.png"}, 1, 1, "knn")
+        {'src': base64.b64encode(tmp.read()).decode('utf-8'), 'title': "knn_predicted.png"}, 2, 1, "knn")
     tmp.close()
 
     fig_dims = (6, 6)
@@ -577,7 +577,7 @@ def knn_all(arry_all, condition2, order, dry_run=False):
 
     tmp = open(pltPath, "rb")
     eel.add_image_different_nd(
-        {'src': base64.b64encode(tmp.read()).decode('utf-8'), 'title': "knn_true.png"}, 1, 1, "knn")
+        {'src': base64.b64encode(tmp.read()).decode('utf-8'), 'title': "knn_true.png"}, 2, 2, "knn")
     tmp.close()
 
     return arry_all, condition2
