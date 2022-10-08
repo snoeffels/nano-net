@@ -355,7 +355,7 @@
               step="5"
           >
             Estimation of K-NN optimal number
-            <small>Summarize if needed</small>
+            <small>Using 8-fold crossvalidation the optimal number of neihgbors is searched wihtin the range of maximal neirbors entered previously. The balanced accuray of class prediction is dispalyed.</small>
           </v-stepper-step>
           <v-stepper-content step="5">
             <v-text-field
@@ -394,7 +394,7 @@
               step="6"
           >
             Select features
-            <small>Summarize if needed</small>
+            <small>Select all the features you would like to be displayed as boxplots.</small>
           </v-stepper-step>
           <v-stepper-content step="6">
             <v-row>
@@ -569,7 +569,7 @@
           <!-- STEP 8 -->
           <v-stepper-step step="8">
             Save results
-            <small>Summarize if needed</small>
+            <small>Select a folder to save your results.</small>
           </v-stepper-step>
           <v-stepper-content step="8">
 
