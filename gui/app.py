@@ -119,6 +119,9 @@ def set_conditions_paths_colors(conditions, paths, colors):
     CONDI_LIST = conditions
     PATHS = paths
     COLORS = colors
+    print("this colours: ", COLORS)
+  
+    
     return 10  # return sample size here
 
 
@@ -373,6 +376,9 @@ def pic(i, p, image, thresh3, closed3, cleared3, image_label_overlay4, label_ima
 
 ##################################################################### for many statistics:
 def semua(l, order, dry_run=False):
+    print(COLORS)
+    
+
 
     # to fix changing plot style bug we need to set those properties for every execution
     sns.set_style('white')
@@ -468,7 +474,7 @@ def tsn_all(arry_all, names_all2, condition2):  # tnse
     df = pd.DataFrame(dict(x=x, y=y, label=condition2, img_name=names_all2))
     df.groupby('label')
 
-    sns.scatterplot(x="x", y="y", hue="label", data=df, palette="Paired")
+    sns.scatterplot(x="x", y="y", hue="label", data=df, palette=COLORS)
 
     global OUTPUT_PATH
     pltPath = os.path.join(OUTPUT_PATH, "tsne") + ".png"
@@ -557,7 +563,7 @@ def knn_all(arry_all, condition2, order, dry_run=False):
 
     fig_dims = (6, 6)
     plt.subplots(figsize=fig_dims)
-    sns.scatterplot(X_test[:, 0], X_test[:, 6], hue=predicted, hue_order=order, s=50, palette="Paired")
+    sns.scatterplot(X_test[:, 0], X_test[:, 6], hue=predicted, hue_order=order, s=50, palette=COLORS)
 
     pltPath = os.path.join(OUTPUT_PATH, "knn_predicted") + ".png"
     plt.savefig(pltPath, format='png')
@@ -572,7 +578,7 @@ def knn_all(arry_all, condition2, order, dry_run=False):
 
     fig_dims = (6, 6)
     plt.subplots(figsize=fig_dims)
-    sns.scatterplot(X_test[:, 0], X_test[:, 6], hue=y_test, hue_order=order,  s=50, palette="Paired")
+    sns.scatterplot(X_test[:, 0], X_test[:, 6], hue=y_test, hue_order=order,  s=50, palette=COLORS)
 
     pltPath = os.path.join(OUTPUT_PATH, "knn_true") + ".png"
     plt.savefig(pltPath, format='png')
@@ -773,7 +779,7 @@ def plots_all(df_all, order):  # boxplots
         plt.subplot(1, 1, 1)
 
         # sns.boxplot(x="condition", y="density", data=df_all, order=order, palette="Paired", showfliers=False)
-        sns.boxplot(x="condition", y=feature, data=df_all, palette="Paired", showfliers=False)
+        sns.boxplot(x="condition", y=feature, data=df_all, palette=COLORS, showfliers=False)
 
         plt.title(lookup[feature]['title'])
         plt.xlabel('condition')

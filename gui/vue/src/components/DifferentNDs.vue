@@ -964,10 +964,11 @@ export default {
     },
     handleNext2() {
       this.globals.paths = [];
-
+      this.globals.colors = [];
+      
       for (var i = 0; i < this.globals.order.length; i++) {
         this.globals.paths.push(this.pathItems[this.orderItems.indexOf(this.globals.order[i])]);
-        this.globals.colors.push(this.colorItems[this.orderItems.indexOf(this.globals.colors[i])]);
+        this.globals.colors.push(this.colorItems[this.orderItems.indexOf(this.globals.order[i])]);
       }
 
       var that = this;
