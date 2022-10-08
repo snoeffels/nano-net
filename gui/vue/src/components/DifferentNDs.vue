@@ -358,6 +358,16 @@
             <small>Using 8-fold crossvalidation the optimal number of neihgbors is searched wihtin the range of maximal neirbors entered previously. The balanced accuray of class prediction is dispalyed.</small>
           </v-stepper-step>
           <v-stepper-content step="5">
+            <v-progress-linear v-if ="globals.acuracyKnn==0"
+              color="primary"
+              indeterminate
+              rounded
+              height="15"
+            ></v-progress-linear>
+
+
+
+
             <v-text-field
                 v-model="globals.acuracyKnn"
                 label="K-NN Acuracy"
