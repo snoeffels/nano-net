@@ -800,12 +800,15 @@ def plots_all(df_all, order):  # boxplots
     }
 
     print(df_all)
+    df_unique=df_all.copy(deep=True)
+    df_unique = df_unique.drop_duplicates(subset=['name'])
 
     for i, feature in enumerate(FEATURES):
         plt.subplot(1, 1, 1)
 
         # sns.boxplot(x="condition", y="density", data=df_all, order=order, palette="Paired", showfliers=False)
-        sns.boxplot(x="condition", y=feature, data=df_all, palette=COLORS, showfliers=False)
+        sns.boxplot(x="condition", y=feature, data=df_unique, palette=COLORS, showfliers=False)
+        sns.swarmplot(x="condition", y=feature, data=df_unique,  color="grey", alpha=1, size=4)
 
         plt.title(lookup[feature]['title'])
         plt.xlabel('condition')
