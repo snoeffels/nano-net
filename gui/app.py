@@ -100,7 +100,7 @@ def set_pixel(p):
 
 @eel.expose
 def set_parameters(parameters):
-    global testSize, nEstimators, minSamplesLeaf, minSamplesSplit, maxDepth, testSizeKnn, nNeighbors, nComponents, perplexity, nIter
+    global testSize, nEstimators, minSamplesLeaf, minSamplesSplit, maxDepth, testSizeKnn, nNeighbors,  perplexity, nIter
     testSize = parameters['testSize']
     nEstimators = parameters['nEstimators']
     minSamplesLeaf = parameters['minSamplesLeaf']
@@ -108,7 +108,6 @@ def set_parameters(parameters):
     maxDepth = parameters['maxDepth']
     testSizeKnn = parameters['testSizeKnn']
     nNeighbors = parameters['nNeighbors']
-    nComponents = parameters['nComponents']
     perplexity = parameters['perplexity']
     nIter = parameters['nIter']
     print("parameters were set")
@@ -451,13 +450,13 @@ def tsn_all(arry_all, names_all2, condition2):  # tnse
 
     tsne = []
 
-    global nComponents, perplexity, nIter
-    print("nComponents -> " + str(nComponents))
+    global perplexity, nIter
+    
     print("perplexity -> " + str(perplexity))
     print("nIter -> " + str(nIter))
 
     try:
-        tsne = TSNE(n_components=int(nComponents), perplexity=int(perplexity), n_iter=int(nIter)).fit_transform(
+        tsne = TSNE(n_components=2, perplexity=int(perplexity), n_iter=int(nIter)).fit_transform(
             X_scaled)
     except ValueError:
         # TODO Fix this!

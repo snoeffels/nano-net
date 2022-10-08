@@ -298,13 +298,7 @@
                 <h4>
                   t-SNE
                 </h4>
-                <v-text-field
-                    v-model="globals.nComponents"
-                    label="N-Components"
-                    hint="Dimension of the embedded space (default: 2)"
-                    type="number"
-                    step="0.01"
-                />
+             
                 <v-text-field
                     v-model="globals.perplexity"
                     label="Perplexity"
