@@ -976,7 +976,7 @@ export default {
         // eslint-disable-next-line no-undef
         eel.set_conditions_paths_colors(this.globals.order, this.globals.paths, this.globals.colors)(function (sampleSize) {
           that.sampleSize = sampleSize;
-          that.perplexity = sampleSize;
+          //that.perplexity = sampleSize;
         });
 
       }

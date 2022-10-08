@@ -52,6 +52,7 @@ PATHS = []
 FEATURES = []
 COLORS = []
 
+SAMPLE_SIZE = 0
 ACCURACY = 0
 ACCURACY_BALANCED = 0
 OPTIMAL_NEIGHBORS = 0
@@ -69,7 +70,7 @@ nIter = 500
 
 # ----------------------------------------------------------------
 
-SAMPLE_SIZE = 10
+
 CANCEL_SAME_NDS = False
 CANCEL_DIFFERENT_NDS = False
 CONDI_LIST = []
@@ -115,14 +116,15 @@ def set_parameters(parameters):
 
 @eel.expose
 def set_conditions_paths_colors(conditions, paths, colors):
-    global CONDI_LIST, PATHS, COLORS
+    global CONDI_LIST, PATHS, COLORS, SAMPLE_SIZE
     CONDI_LIST = conditions
     PATHS = paths
     COLORS = colors
     print("this colours: ", COLORS)
-  
-    
-    return 10  # return sample size here
+    SAMPLE_SIZE = get_samplesize(PATHS)
+
+
+    return SAMPLE_SIZE  # return sample size here
 
 
 @eel.expose
@@ -152,6 +154,8 @@ def get_accuracy():
 @eel.expose
 def get_sample_size():
     global SAMPLE_SIZE
+    SAMPLE_SIZE = get_samplesize(PATHS)
+
     return SAMPLE_SIZE
 
 
@@ -234,6 +238,25 @@ def cancel_different_nds():
 ##############################################################
 #                       Actual Logic                         #
 ##############################################################
+def get_samplesize(PATHS): 
+    samplesize_list=[]
+    for countfolder in PATHS:
+        onlyfiles = [f for f in listdir(countfolder) if isfile(join(countfolder, f))]
+        for i in onlyfiles:
+            if i.endswith(".tif"):
+                samplesize_list.append(i)
+    samplesize = len(samplesize_list)
+    print(len(samplesize_list))
+    print(samplesize_list)
+    print(samplesize)
+    return samplesize
+
+                
+
+
+
+
+    
 
 # get excel and pictures:
 def paths(mypath):
@@ -376,9 +399,8 @@ def pic(i, p, image, thresh3, closed3, cleared3, image_label_overlay4, label_ima
 
 ##################################################################### for many statistics:
 def semua(l, order, dry_run=False):
-    print(COLORS)
     
-
+    
 
     # to fix changing plot style bug we need to set those properties for every execution
     sns.set_style('white')
@@ -408,6 +430,7 @@ def semua(l, order, dry_run=False):
     condition = 1 * names_all
     condition2 = []
     names_all2 = []
+    
 
     for i, j in enumerate(CONDI_LIST):
         condition[i] = [j] * len(names_all[i])
@@ -430,6 +453,9 @@ def semua(l, order, dry_run=False):
             condi_df2.append(name)
 
     df_all["condition"] = condi_df2
+    
+    
+  
 
     # calculate accuracy
     if dry_run:
