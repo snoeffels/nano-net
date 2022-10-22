@@ -799,10 +799,10 @@ def plots_all(df_all, order):  # boxplots
         }
     }
 
-    print(df_all)
+    # print(df_all)
     df_unique=df_all.copy(deep=True)
     df_unique = df_unique.drop_duplicates(subset=['name'])
-
+    print(df_unique.columns)
     for i, feature in enumerate(FEATURES):
         plt.subplot(1, 1, 1)
 

@@ -508,7 +508,7 @@
                 <v-checkbox
                     class="ml-2"
                     v-model="checkboxes.meanPerimeter"
-                    @change="setFeatures('meanPerimeter')"
+                    @change="setFeatures('mean_perimeter')"
                     label="Mean perimeter of NDs per image"
                 />
 
