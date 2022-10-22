@@ -304,10 +304,13 @@
                     label="Perplexity"
                     hint="Consider selecting a value between 5 and 50. Different values can result in significantly different results. The perplexity must be less that the number of samples."
                     type="number"
+                    oninput = "if (this.value<0) this.value=0"
                     @change="handlePerplexityChange"
                     :max="sampleSize"
+                    :min = 0
                     step="1"
                 />
+                
                 <v-text-field
                     v-model="globals.nIter"
                     label="N-Iterations"
@@ -340,6 +343,7 @@
                 small
                 color="primary"
                 @click="handleNext3"
+                const zero = 0
                 :disabled="globals.perplexity > sampleSize"
             >
               Next
