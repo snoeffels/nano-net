@@ -14,7 +14,7 @@
                 <p class="text-sm-body-2">
                   This part of the NanoNet expects one folder with TIFF images, displaying your regions of interest (ROIs). 
                   For certain features (such as Nanodomain density) it is important that your ROIs all have the same size. 
-                  The app will prompt you to enter the size in pixels. This can be checked in common image analysis tool such as Fiji. 
+                  The app will prompt you to enter the size in pixels. This can be checked in common image analysis tools such as Fiji. 
                   As output you will get a results excel sheet with all the features extracted. For a detailed description of feature annotation see (NanoNet Guide).
                 </p>
                 <v-btn small color="primary" @click="sameNDs=true">
@@ -27,7 +27,7 @@
                 <p class="text-sm-body-2">
                   This part of the NanoNet expects at minimum 2 input folders with TIFF images, displaying your regions of interest (ROIs) you want to compare. 
                   For certain features (such as Nanodomain density) it is important that your ROIs all have the same size. 
-                  The app will prompt you to enter the size in pixels. This can be checked in common image analysis tool such as Fiji. 
+                  The app will prompt you to enter the size in pixels. This can be checked in common image analysis tools such as Fiji. 
                   The extracted features of each condition (image folder) will be passed on to train a Random Forest (RF) and a k-NN classifier (k-NN). 
                   Additionally you will get boxplots comparing chosen features between your conditions, a t-SNE map and an inter-feature correlation map. For a detailed description of feature annotation see (NanoNet Guide).
                 </p>

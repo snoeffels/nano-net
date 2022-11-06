@@ -359,7 +359,7 @@
               step="5"
           >
             Estimation of K-NN optimal number
-            <small>Using 8-fold crossvalidation the optimal number of neihgbors is searched wihtin the range of maximal neirbors entered previously. The balanced accuray of class prediction is dispalyed.</small>
+            <small>Using 8-fold crossvalidation the optimal number of neighbors is searched within the range of maximal neighbors entered previously. The balanced accuray of class prediction is displayed.</small>
           </v-stepper-step>
           <v-stepper-content step="5">
             <v-progress-linear v-if ="globals.acuracyKnn==0"
@@ -382,7 +382,7 @@
             />
             <v-text-field
                 v-model="globals.optimalNumberOfNeighbors"
-                label="Optimal number of neighbors"
+                label="Optimal nr. of neighbors"
                 type="number"
                 step="1"
                 readonly
@@ -527,7 +527,7 @@
                     class="ml-2"
                     v-model="checkboxes.SCI"
                     @change="setFeatures('sci')"
-                    label="SCI"
+                    label="Image wide SCI"
                 />
 
                 <v-checkbox
