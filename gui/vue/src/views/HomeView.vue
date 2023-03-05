@@ -4,7 +4,7 @@
       <v-container>
         <v-row>
           <v-col cols="12">
-            <h2>Home</h2>
+            <h2>Home test</h2>
             <p class="text-sm-body-2">
               NanoNet prompts you to choose between two main workflows: segmentation and feature extraction for one condition (A) or machine learning aided classification and feature comparison between different conditions (B). 
             </p>
