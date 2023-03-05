@@ -253,8 +253,68 @@ def get_samplesize(PATHS):
 
                 
 
+def make_mybin_dataframe(image, PIXEL):
+   
+    props4, arry_im, list_size4, mean_area, var_size, density, list_fluo, list_relative_fluo, mean_fluo, var_fluo, list_intensity_max, mean_intensity_max, list_intensity_min, mean_intensity_min, list_area_filled, mean_area_filled, list_axis_major_length, mean_axis_major_length, list_axis_minor_length, mean_axis_minor_length, list_eccentricity, mean_eccentricity, list_equivalent_diameter_area, mean_equivalent_diameter_area, list_perimeter, mean_perimeter, list_label, sum_label, image, thresh3, closed3, cleared3, image_label_overlay4, label_image4, sci, density_microns = mybin(
+            image, PIXEL)
 
+    columns = ["name", "area", "mean_area", "var_area", "density", "intensity", "relative_intensity",
+                   "mean_intensity", "var_intensity", "max_intensity", "mean_max_intensity", "min_intensity",
+                   "mean_min_intensity", "area_filled", "mean_area_filled", "major_axis_length",
+                   "mean_major_axis_length", "minor_axis_length", "mean_minor_axis_length", "eccentricity",
+                   "mean_eccentricity", "equivalent_diameter_area", "mean_equivalent_diameter_area", "perimeter",
+                   "mean_perimeter", "nano_domain_id", "nano_domain_quantity", "sci", "density_microns"]
+    new = list_size4
 
+    if len(list_size4) > 0:
+        for j in range(len(list_size4)):
+            new[j] = [name, list_size4[j], mean_area, var_size, density, list_fluo[j], list_relative_fluo[j],
+                          mean_fluo, var_fluo, list_intensity_max[j], mean_intensity_max, list_intensity_min[j],
+                          mean_intensity_min, list_area_filled[j], mean_area_filled, list_axis_major_length[j],
+                          mean_axis_major_length, list_axis_minor_length[j], mean_axis_minor_length,
+                          list_eccentricity[j], mean_eccentricity, list_equivalent_diameter_area[j],
+                          mean_equivalent_diameter_area, list_perimeter[j], mean_perimeter, list_label[j], sum_label,
+                          sci, density_microns]
+
+        rows = new
+        mybin_df = pd.DataFrame(rows, columns=columns)
+    else:
+        new = [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]
+        new[0][0] = name
+
+        rows = new
+        mybin_df = pd.DataFrame(rows, columns=columns)
+
+    return(mybin_df)
+
+def make_excel(mybin_df):
+        
+    if 'file' in globals():
+        if os.path.isfile(file) == True:  # if file already exists append to existing file
+            workbook = openpyxl.load_workbook(file)  # load workbook if already exists
+            sheet = workbook['Sheet1']  # declare the active sheet
+            for row in dataframe_to_rows(mybin_df, header=False, index=False):
+                sheet.append(row)
+            workbook.save(file)  # save workbook
+            workbook.close()  # close workbook
+    else:  # create the excel file if doesn't already exist
+
+        if count == 1:
+
+            out_path = OUTPUT_PATH + "/Test_results.xlsx"
+            writer = pd.ExcelWriter(out_path, engine='xlsxwriter')
+            data.to_excel(writer, sheet_name='Sheet1', header=True, index=False)
+            writer.save()
+            writer.close()
+        else:
+            workbook = openpyxl.load_workbook(out_path)  # load workbook if already exists
+            sheet = workbook['Sheet1']  # declare the active sheet
+            for row in dataframe_to_rows(mybin_df, header=False, index=False):
+                sheet.append(row)
+            workbook.save(out_path)  # save workbook
+            workbook.close()  # close workbook
+
+    return ()
 
     
 
