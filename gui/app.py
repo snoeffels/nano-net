@@ -252,9 +252,8 @@ def get_samplesize(PATHS):
     return samplesize
 
                 
-
+#####################################################################
 def make_mybin_df(image, name, pixelsize,pixellength, me, blurred, label_image4):
-
 
     arry_im, list_size4, mean_area, var_size, density, list_fluo, list_relative_fluo, mean_fluo, var_fluo, list_intensity_max, mean_intensity_max, list_intensity_min, mean_intensity_min, list_area_filled,mean_area_filled,list_axis_major_length, mean_axis_major_length, list_axis_minor_length, mean_axis_minor_length, list_eccentricity, mean_eccentricity, list_equivalent_diameter_area, mean_equivalent_diameter_area, list_perimeter, mean_perimeter,list_label, sum_label, sci, density_microns = mybin( image, pixelsize,pixellength, me, blurred, label_image4 )
     
@@ -286,42 +285,29 @@ def make_mybin_df(image, name, pixelsize,pixellength, me, blurred, label_image4)
         rows = new
         mybin_df = pd.DataFrame(rows, columns=columns)
     return(mybin_df, arry_im)
-
+###########################################
 def make_excel(mybin_df, count):
-    if 'file' in globals():
-        if os.path.isfile(file) == True:  # if file already exists append to existing file
-            workbook = openpyxl.load_workbook(file)  # load workbook if already exists
-            sheet = workbook['Sheet1']  # declare the active sheet
-            for row in dataframe_to_rows(mybin_df, header=False, index=False):
-                sheet.append(row)
-            workbook.save(file)  # save workbook
-            workbook.close()  # close workbook
-    else:  # create the excel file if doesn't already exist
-
-        if count == 1:
-
-            out_path = OUTPUT_PATH + "/Test_results.xlsx"
-            writer = pd.ExcelWriter(out_path, engine='xlsxwriter')
-            mybin_df.to_excel(writer, sheet_name='Sheet1', header=True, index=False)
-            writer.save()
-            writer.close()
-        else:
-            workbook = openpyxl.load_workbook(out_path)  # load workbook if already exists
-            sheet = workbook['Sheet1']  # declare the active sheet
-            for row in dataframe_to_rows(mybin_df, header=False, index=False):
-                sheet.append(row)
-            workbook.save(out_path)  # save workbook
-            workbook.close()  # close workbook
-
-
     
+    if count == 1:
 
-# get excel and pictures:
+        out_path = OUTPUT_PATH + "/Test_results.xlsx"
+        writer = pd.ExcelWriter(out_path, engine='xlsxwriter')
+        mybin_df.to_excel(writer, sheet_name='Sheet1', header=True, index=False)
+        writer.save()
+        writer.close()
+    else:
+        workbook = openpyxl.load_workbook(out_path)  # load workbook if already exists
+        sheet = workbook['Sheet1']  # declare the active sheet
+        for row in dataframe_to_rows(mybin_df, header=False, index=False):
+            sheet.append(row)
+        workbook.save(out_path)  # save workbook
+        workbook.close()  # close workbook
+
+################################# one condition workflow:
 def one_condition_workflow(path1):
     global CANCEL_SAME_NDS
     CANCEL_SAME_NDS = False
     
-    # to fix changing plot style bug we need to set those properties for every execution
     sns.set_style('white')
     
     p = []
@@ -335,9 +321,8 @@ def one_condition_workflow(path1):
 
     count = 0
     seg = 0
-#####
-    for i in range(len(p)):
 
+    for i in range(len(p)):
 
         eel.sleep(0.001)
 
@@ -356,10 +341,7 @@ def one_condition_workflow(path1):
 
         pic(i, len(p), image, thresh3, closed3, cleared3, image_label_overlay4, label_image4, name, seg)
 
-     ####   
-
-        
-
+    
     CANCEL_SAME_NDS = False
 
 ##################################################################################################################
@@ -411,8 +393,6 @@ def pic(i, p, image, thresh3, closed3, cleared3, image_label_overlay4, label_ima
 ##################################################################### for many statistics:
 def semua(l, order, dry_run=False):
     
-    
-
     # to fix changing plot style bug we need to set those properties for every execution
     sns.set_style('white')
 
