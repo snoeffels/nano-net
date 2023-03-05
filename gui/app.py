@@ -209,7 +209,7 @@ def select_folder_tk():
 
 @eel.expose
 def run_same_nds():
-    paths(PATH_1)
+    one_condition_workflow(PATH_1)
 
 
 @eel.expose
@@ -251,15 +251,8 @@ def get_samplesize(PATHS):
     print(samplesize)
     return samplesize
 
-                
-
-
-
-
-    
-
-# get excel and pictures:
-def paths(mypath):
+#run workflow for option A: one single condition
+def one_condition_workflow(path1):
     global CANCEL_SAME_NDS
     CANCEL_SAME_NDS = False
     
@@ -268,7 +261,7 @@ def paths(mypath):
     
     p = []
     names = []
-    onlyfiles = [f for f in listdir(mypath) if isfile(join(mypath, f))]
+    onlyfiles = [f for f in listdir(path1) if isfile(join(path1, f))]
     for i in onlyfiles:
         if i.endswith(".tif"):
             names.append(i)
@@ -292,7 +285,8 @@ def paths(mypath):
         props4, arry_im, list_size4, mean_area, var_size, density, list_fluo, list_relative_fluo, mean_fluo, var_fluo, list_intensity_max, mean_intensity_max, list_intensity_min, mean_intensity_min, list_area_filled, mean_area_filled, list_axis_major_length, mean_axis_major_length, list_axis_minor_length, mean_axis_minor_length, list_eccentricity, mean_eccentricity, list_equivalent_diameter_area, mean_equivalent_diameter_area, list_perimeter, mean_perimeter, list_label, sum_label, image, thresh3, closed3, cleared3, image_label_overlay4, label_image4, sci, density_microns = mybin(
             image, PIXEL)
 
-        pic(i, len(p), image, thresh3, closed3, cleared3, image_label_overlay4, label_image4, name, mypath, seg)
+        pic(i, len(p), image, thresh3, closed3, cleared3, image_label_overlay4, label_image4, name, path1, seg)
+
         columns = ["name", "area", "mean_area", "var_area", "density", "intensity", "relative_intensity",
                    "mean_intensity", "var_intensity", "max_intensity", "mean_max_intensity", "min_intensity",
                    "mean_min_intensity", "area_filled", "mean_area_filled", "major_axis_length",
@@ -348,12 +342,9 @@ def paths(mypath):
 
     CANCEL_SAME_NDS = False
 
-    return (data, p, names, props4, list_size4, list_fluo, mean_area, density, list_relative_fluo)
-
-
 ##################################################################################################################
 # for visual pictures- works
-def pic(i, p, image, thresh3, closed3, cleared3, image_label_overlay4, label_image4, name, mypath, seg):
+def pic(i, p, image, thresh3, closed3, cleared3, image_label_overlay4, label_image4, name, path1, seg):
     fig, axes = plt.subplots(nrows=1, ncols=5, figsize=(10, 10), sharex=True, sharey=True)
     ax = axes.ravel()
 
@@ -410,6 +401,7 @@ def semua(l, order, dry_run=False):
     names_all = [0] * len(l)
     arry_l = [0] * len(l)
     laenge = [0] * len(l)
+
     for num, kata in enumerate(l):
         df_list[num], names_all[num], arry_l[num] = paths_plot(kata)
 
