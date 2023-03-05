@@ -259,7 +259,7 @@ def get_samplesize(PATHS):
     
 
 # get excel and pictures:
-def paths(mypath):
+def one_condition_workflow(path1):
     global CANCEL_SAME_NDS
     CANCEL_SAME_NDS = False
     
