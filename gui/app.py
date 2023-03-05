@@ -253,10 +253,10 @@ def get_samplesize(PATHS):
 
                 
 
-def make_mybin_df(image, name, pixelsize,pixellength, me, blurred, label_image4,image_label_overlay4):
+def make_mybin_df(image, name, pixelsize,pixellength, me, blurred, label_image4):
 
 
-    arry_im, list_size4, mean_area, var_size, density, list_fluo, list_relative_fluo, mean_fluo, var_fluo, list_intensity_max, mean_intensity_max, list_intensity_min, mean_intensity_min, list_area_filled,mean_area_filled,list_axis_major_length, mean_axis_major_length, list_axis_minor_length, mean_axis_minor_length, list_eccentricity, mean_eccentricity, list_equivalent_diameter_area, mean_equivalent_diameter_area, list_perimeter, mean_perimeter,list_label, sum_label, sci, density_microns = mybin( image, pixelsize,pixellength, me, blurred, label_image4,image_label_overlay4 )
+    arry_im, list_size4, mean_area, var_size, density, list_fluo, list_relative_fluo, mean_fluo, var_fluo, list_intensity_max, mean_intensity_max, list_intensity_min, mean_intensity_min, list_area_filled,mean_area_filled,list_axis_major_length, mean_axis_major_length, list_axis_minor_length, mean_axis_minor_length, list_eccentricity, mean_eccentricity, list_equivalent_diameter_area, mean_equivalent_diameter_area, list_perimeter, mean_perimeter,list_label, sum_label, sci, density_microns = mybin( image, pixelsize,pixellength, me, blurred, label_image4 )
     
     columns = ["name", "area", "mean_area", "var_area", "density", "intensity", "relative_intensity",
                    "mean_intensity", "var_intensity", "max_intensity", "mean_max_intensity", "min_intensity",
@@ -351,10 +351,10 @@ def one_condition_workflow(path1):
         image = iio.imread(b[0])
         pixelsize, pixellength, me,blurred, thresh3, closed3, cleared3, label_image4, image_label_overlay4=make_threshold(image)
 
-        one_condition_df, arry_im= make_mybin_df( image, name, pixelsize,pixellength, me, blurred, label_image4,image_label_overlay4)
+        one_condition_df, arry_im= make_mybin_df( image, name, pixelsize,pixellength, me, blurred, label_image4)
         make_excel(one_condition_df, count)
 
-        pic(i, len(p), image, thresh3, closed3, cleared3, image_label_overlay4, label_image4, name, path1, seg)
+        pic(i, len(p), image, thresh3, closed3, cleared3, image_label_overlay4, label_image4, name, seg)
 
      ####   
 
@@ -364,7 +364,7 @@ def one_condition_workflow(path1):
 
 ##################################################################################################################
 # for visual pictures- works
-def pic(i, p, image, thresh3, closed3, cleared3, image_label_overlay4, label_image4, name, path1, seg):
+def pic(i, p, image, thresh3, closed3, cleared3, image_label_overlay4, label_image4, name,  seg):
     fig, axes = plt.subplots(nrows=1, ncols=5, figsize=(10, 10), sharex=True, sharey=True)
     ax = axes.ravel()
 
@@ -908,7 +908,7 @@ def calculate_sci(bild):
 ##############################################################################################
 # estimation of parameter lambda of a poisson distribution- works
 def make_threshold(image):
-    pixel = float(pixel)
+    pixel = float(PIXEL)
     pixelsize = (pixel / image.shape[0]) ** 2  # enter the pixelsize in microns
     pixellength = pixel / image.shape[0] 
     
@@ -935,7 +935,7 @@ def make_threshold(image):
 
    
 
-def mybin(image, pixelsize,pixellength, me, blurred, label_image4,image_label_overlay4 ):
+def mybin(image, pixelsize,pixellength, me, blurred, label_image4 ):
     sci = calculate_sci(image)
     props4 = regionprops(label_image=label_image4, intensity_image=image, cache=True)
 
